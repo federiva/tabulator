@@ -1,0 +1,7 @@
+# (uncomment to add a dependency)
+dependencies:
+ - name: "tabulator"
+   version: "0.1"
+   src: "htmlwidgets/dist"
+   script: "js/tabulator.min.js"
+   stylesheet: "css/tabulator_bootstrap5.min.css"
