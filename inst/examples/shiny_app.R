@@ -13,6 +13,7 @@ server <- function(input, output, session) {
       column_layout_mode("fitColumns") |>
       set_layout_columns_on_new_data() |>
       pagination(pagination_size = 5, mode = "remote")
+
   })
 
 }
