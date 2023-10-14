@@ -1,16 +1,10 @@
-pagination_modes <- c("remote", "local")
+pagination_modes <- c("remote", "local", "server")
 endpoint_name <- "shiny-tabulator-request"
 
-#  pagination:true, //enable pagination
-#     paginationMode:"remote", //enable remote pagination
-#     ajaxURL:"http://testdata.com/data", //set url for ajax request
-#     ajaxParams:{token:"ABC123"}, //set any standard parameters to pass with the request
-#     paginationSize:5, //optional parameter to request a certain number of rows per page
-#     paginationInitialPage:2, //
-# https://tabulator.info/docs/5.5/page
 #' @importFrom checkmate assert_vector test_choice
 #' @importFrom glue glue
 #' @importFrom rlang abort
+#' @noRd
 test_for_valid_pagination_mode <- function(mode) {
   assert_vector(mode, len = 1, null.ok = TRUE, .var.name = "pagination mode")
   test <- test_choice(mode, pagination_modes, null.ok = TRUE)
@@ -28,31 +22,63 @@ test_for_valid_pagination_mode <- function(mode) {
   invisible(TRUE)
 }
 
+#' Available Pagination Modes
 #' Lists the available pagination modes
 #' @export
 get_available_pagination_modes <- function() {
   pagination_modes
 }
 
+
+#' Pagination
+#'
+#' Paginate records shown in the table
+#'
+#' @param tabulator_object An object of class tabulator
+#' @param mode A character. Default to local. You can see the available modes
+#' by calling the function `get_available_pagination_modes()`.
+#' When mode is `local` tabulator will send all of the data to the frontend
+#' and the data will be paginated there.
+#' When mode is `server` then only the requested data will be sent from the R
+#' server to the frontend thus diminishing the amount of data being serialized
+#' and sent to the browser. See the example app `shiny_app_server_pagination`.
+#' When mode is `remote` the `request_handler` argument must be provided and only
+#' the data returned by that function will be sent to the browser. Remote should
+#' be chosen when our data source is external like an API or a Database. See the
+#' example app `shiny_app_remote_api_pagination.R` in order to see the
+#' request_handler callback used to query an API and also the
+#' `shiny_app_remote_database.R` for an example callback used in order to query
+#' a database with pagination.
+#' @param pagination_size A numeric. Defaults to 10, the amount of records
+#' shown by each page.
+#' @param pagination_initial_page TODO pass this to JS
+#' @param request_handler A function with the data and req parameters that is
+#' passed as the `filterFunc` argument of `session$registerDataObj`
+#'
+#' @seealso [tabulator documentation](https://tabulator.info/docs/5.5/page)
+#'
+#' @return An object of class tabulator
+#'
 #' @export
-pagination <- function(tabulator_object, mode = NULL, ajax_url = NULL, ajax_params = NULL, pagination_size = 10, pagination_initial_page = 1) {
+pagination <- function(tabulator_object, mode = 'local', pagination_size = 10, pagination_initial_page = 1, request_handler = NULL) {
   if (test_for_valid_pagination_mode(mode)) {
     tabulator_object$x$pagination <- TRUE
-    tabulator_object <- get_pagination_mode(tabulator_object, mode)
-    tabulator_object$x$ajaxURL <- get_ajax_url(mode, ajax_url)
-    tabulator_object$x$ajaxParams <- ajax_params
+    tabulator_object <- set_pagination_mode(tabulator_object, mode, request_handler)
+    tabulator_object$x$ajaxURL <- get_ajax_url(mode)
     tabulator_object$x$paginationSize <- pagination_size
     tabulator_object$x$paginationInitialPage <- pagination_initial_page
   }
-  print(tabulator_object$x$paginationMode)
   tabulator_object
 }
 
+
+#' @noRd
 filter_data_on_request <- function(request_obj, data_in) {
   query_string <- parseQueryString(request_obj$QUERY_STRING)
   if (length(query_string) == 0) {
     return()
   }
+  data_in <- filter_data(data_in, query_string)
   page_number <- as.numeric(query_string$page)
   page_size <- as.numeric(query_string$size)
   start_row <- (page_number - 1) * page_size + 1
@@ -61,23 +87,26 @@ filter_data_on_request <- function(request_obj, data_in) {
   data_in[start_row:min(end_row, nrow(data_in)), ]
 }
 
+
+#' @noRd
 get_total_pages <- function(data, page_size) {
   ceiling(nrow(data) / page_size)
 }
 
 #' @importFrom shiny getDefaultReactiveDomain
-get_ajax_url <- function(mode, ajax_url) {
-  if (!is.null(mode) && mode == "remote") {
-    if (is.null(ajax_url)) {
-      session <- getDefaultReactiveDomain()
-      ajax_url <- paste0("/session/", session$token, "/dataobj/", endpoint_name)
-    }
+#' @noRd
+get_ajax_url <- function(mode) {
+  ajax_url <- NULL
+  if (!is.null(mode) && mode %in% c("remote", "server")) {
+    session <- getDefaultReactiveDomain()
+    ajax_url <- paste0("/session/", session$token, "/dataobj/", endpoint_name)
   }
   ajax_url
 }
 
 #' @importFrom shiny parseQueryString httpResponse
 #' @importFrom jsonlite toJSON
+#' @noRd
 default_request_handler <- function(data, req) {
   query_string <- parseQueryString(req$QUERY_STRING)
   if (length(query_string) == 0) {
@@ -95,21 +124,33 @@ default_request_handler <- function(data, req) {
 }
 
 #' @importFrom shiny getDefaultReactiveDomain
-get_pagination_mode <- function(tabulator_object, mode) {
+#' @noRd
+set_pagination_mode <- function(tabulator_object, mode, request_handler = NULL) {
+  if (is.null(request_handler)) {
+    request_handler <- default_request_handler
+  }
+
   if (!is.null(mode)) {
-    tabulator_object$x$paginationMode <- mode
-    if (mode == "remote") {
+    if (mode %in% c("remote", "server")) {
       session <- getDefaultReactiveDomain()
       complete_dataset <- tabulator_object$x$data
-      # Remove data from tabulator_object to avoid rendering the data and sending
-      # the complete dataframe to the frontend
-      tabulator_object$x$data <- NULL
+      if (mode == "server") {
+        # Remove data from tabulator_object to avoid rendering the data and sending
+        # the complete dataframe to the frontend
+        tabulator_object$x$data <- NULL
+      }
       session$registerDataObj(
         name = endpoint_name,
         data = complete_dataset,
-        filterFunc = default_request_handler
+        filterFunc = request_handler
       )
+      # Server mode is only meaningful for the R Package, not for the
+      # JS library. Overriding to remote.
+      mode <- "remote"
     }
+    tabulator_object$x$paginationMode <- mode
+  } else {
+    mode <- "local"
   }
   tabulator_object
 }

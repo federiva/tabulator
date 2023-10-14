@@ -5,7 +5,7 @@
 #' @import htmlwidgets
 #'
 #' @export
-tabulator <- function(data, width = NULL, height = NULL, elementId = NULL) {
+tabulator <- function(data = NULL, width = NULL, height = NULL, elementId = NULL) {
   data <- check_for_valid_column_names(data)
   # forward options using x
   params = list(

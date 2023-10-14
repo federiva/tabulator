@@ -2,10 +2,12 @@
 % Please edit documentation in R/pagination.R
 \name{get_available_pagination_modes}
 \alias{get_available_pagination_modes}
-\title{Lists the available pagination modes}
+\title{Available Pagination Modes
+Lists the available pagination modes}
 \usage{
 get_available_pagination_modes()
 }
 \description{
+Available Pagination Modes
 Lists the available pagination modes
 }

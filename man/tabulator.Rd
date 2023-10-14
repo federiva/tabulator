@@ -6,7 +6,7 @@
 <Add Title>
 }}}
 \usage{
-tabulator(data, width = NULL, height = NULL, elementId = NULL)
+tabulator(data = NULL, width = NULL, height = NULL, elementId = NULL)
 }
 \description{
 \if{html}{\out{

@@ -17,10 +17,11 @@ HTMLWidgets.widget({
         window.da = x;
         const table = new Tabulator(`#${el.id}`, {
           data: x.data,
-          autoColumns: true,
           layout: x.column_layout_mode,
+          filterMode: "remote",
           layoutColumnsOnNewData: x.layout_columns_on_new_data,
-          ...parsePagination(x)
+          ...parsePagination(x),
+          ...parseColumns(x)
         });
         window.pala = table;
 
@@ -48,5 +49,12 @@ const parsePagination = serializedData => {
     ajaxParams: serializedData.ajaxParams,
     paginationSize: serializedData.paginationSize,
     paginationInitialPage: serializedData.paginationInitialPage
+  }
+}
+
+const parseColumns = x => {
+  return {
+    autoColumns: !!x.columns ? false : true,
+    columns: x.columns
   }
 }
