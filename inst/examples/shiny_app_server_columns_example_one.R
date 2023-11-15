@@ -32,6 +32,12 @@ server <- function(input, output, session) {
               field = "Sepal_Length",
               headerFilter = TRUE,
               headerFilterFunc = "<="
+            ),
+            tabulator_column(
+              title = "Sepal Width",
+              field = "Sepal_Width",
+              headerFilter = TRUE,
+              headerFilterFunc = "!="
             )
           )
         )

@@ -1,5 +1,6 @@
 available_symbol_operators <- list(
   `=` = "==",
+  `!=` = "!=",
   `<` = "<",
   `>` = ">",
   `<=` = "<=",
@@ -7,7 +8,9 @@ available_symbol_operators <- list(
   `in` = "%in%"
 )
 
+
 #' @importFrom glue glue
+#' @noRd
 parse_filters_from_query_string <- function(query_string) {
   filter_names <- grep(
     pattern = "^filter\\[\\d+\\]\\[[a-zA-Z]+\\]$",
@@ -41,16 +44,42 @@ extract_unique_numbers_from_query_string <- function(query_string_names) {
 }
 
 
-#' @importFrom stringr str_detect
-#' @importFrom rlang sym
+#' @importFrom stringr str_detect str_starts str_ends
+#' @importFrom rlang sym warn
+#' @importFrom glue glue
 #' @importFrom dplyr filter
+#' @noRd
 run_filter_func <- function(data_in, type, field, value) {
-  if (type == "like") {
-    data_in |>
-      filter(str_detect(!!sym(field), value))
-  } else if (is_symbol_operator(type)) {
-    dynamic_symbol_filter(data_in, type, field, value)
-  }
+  # TODO Fede Oct 15 / Extract the logic of callback functions to a similar logic applied in dynamic_symbol_filter
+  tryCatch({
+    if (type == "like") {
+      data_in |>
+        filter(str_detect(string = !!sym(field), pattern = value))
+    } else if (type == "ends") {
+      data_in |>
+        filter(str_ends(string = grepl(!!sym(field), pattern = value)))
+    } else if (type == "regex") {
+      data_in |>
+        filter(grepl(x = !!sym(field), pattern = value))
+    } else if (type == "starts") {
+      data_in |>
+        filter(str_starts(!!sym(field), value))
+    } else if (is_symbol_operator(type)) {
+      dynamic_symbol_filter(data_in, type, field, value)
+    }
+  }, error = function(cond) {
+    message <- glue(
+      "Server-side error when filtering {field} with {value} and type {type}.\n",
+      "Error: {cond$message}.\n",
+      "Returning the unfiltered dataset."
+    )
+    browser()
+    rlang::warn(
+      message = message,
+      class = "ErrorFilter"
+    )
+    data_in
+  })
 }
 
 
@@ -63,10 +92,14 @@ match_symbol_operator <- function(type) {
   available_symbol_operators[[type]]
 }
 
+#' @importFrom dplyr filter
+#' @importFrom rlang parse_expr eval_tidy
+#' @importFrom glue glue
+#' @noRd
 dynamic_symbol_filter <- function(data_in, type, field, value) {
   operator <- match_symbol_operator(type)
   expr_str <- paste0("!!sym(field) ", operator, " value")
-  expr_str <- glue("!!{field} {operator} {value}")
+  expr_str <- glue("!!{field} {operator} '{value}'")
   expr <- rlang::parse_expr(expr_str)
   data_in |>
     filter(rlang::eval_tidy(expr))
