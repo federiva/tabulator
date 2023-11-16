@@ -43,7 +43,6 @@ server <- function(input, output, session) {
             tabulator_column(
               title = "Favourite Color",
               field = "Favourite_Color",
-
               headerFilter = TRUE,
               headerFilterFunc = "ends"
             ),

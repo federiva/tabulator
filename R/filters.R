@@ -57,7 +57,7 @@ run_filter_func <- function(data_in, type, field, value) {
         filter(str_detect(string = !!sym(field), pattern = value))
     } else if (type == "ends") {
       data_in |>
-        filter(str_ends(string = grepl(!!sym(field), pattern = value)))
+        filter(str_ends(string = !!sym(field), pattern = value))
     } else if (type == "regex") {
       data_in |>
         filter(grepl(x = !!sym(field), pattern = value))
