@@ -1,3 +1,7 @@
+rlang::on_load(
+  rlang::local_use_cli()
+)
+
 #' Check for Valid Column Names in a given data.frame
 #'
 #' This function checks if the column names of a given data frame contain dots,
@@ -10,7 +14,7 @@
 #'
 #' @seealso [tabulator issue](https://github.com/olifolkerd/tabulator/issues/2911)
 #'
-#' @importFrom rlang warn
+#' @importFrom cli cli_warn
 #' @importFrom glue glue
 #' @noRd
 check_for_valid_column_names <- function(data, force_convert = TRUE) {
@@ -18,14 +22,16 @@ check_for_valid_column_names <- function(data, force_convert = TRUE) {
   test <- any(grepl("\\.", columns))
   if (test) {
     invalid_columns <- grep("\\.", columns, value = TRUE)
-    message <- glue(
+    invalid_columns_message <- glue(
       "The columns {paste(invalid_columns, collapse = ', ')} will not be rendered as ", 
-      "tabulator does not support column names with dots. ",
-      "The dots in the column names will be automatically converted to underscores.\n",
-      "See `https://github.com/olifolkerd/tabulator/issues/2911` for reference"
+      "Tabulator does not support column names with periods. "
     )
-    warn(
-      message = message,
+    cli_warn(
+      message = c(
+        invalid_columns_message,
+        "!" = "The periods in the column names will be automatically converted to underscores.",
+        "i" = "See {.url https://github.com/olifolkerd/tabulator/issues/2911} for reference"
+      ),
       class = "WrongColumnNames"
     )
     data <- convert_dots_to_underscores(data)
