@@ -16,15 +16,17 @@ rlang::on_load(
 #'
 #' @importFrom cli cli_warn
 #' @importFrom glue glue
+#' @importFrom stringr str_escape
 #' @noRd
-check_for_valid_column_names <- function(data, force_convert = TRUE) {
+check_for_valid_column_names <- function(data, nested_field_separator) {
   columns <- colnames(data)
-  test <- any(grepl("\\.", columns))
+  test <- any(grepl(str_escape(nested_field_separator), columns))
   if (test) {
     invalid_columns <- grep("\\.", columns, value = TRUE)
     invalid_columns_message <- glue(
       "The columns {paste(invalid_columns, collapse = ', ')} will not be rendered as ", 
-      "Tabulator does not support column names with periods. "
+      "Tabulator does not support the use of characters in the column names that are using",
+      "the same string as the nested_field_separator argument"
     )
     cli_warn(
       message = c(
@@ -34,7 +36,7 @@ check_for_valid_column_names <- function(data, force_convert = TRUE) {
       ),
       class = "WrongColumnNames"
     )
-    data <- convert_dots_to_underscores(data)
+    datas <- convert_dots_to_underscores(data)
   }
   data
 }
@@ -47,4 +49,16 @@ convert_dots_to_underscores <- function(data) {
     regex = "\\."
   )
   data
+}
+
+#' @importFrom checkmate test_named
+#' @importFrom cli cli_abort
+assert_is_named <- function(x) {
+  # assert with checkmate
+  if (!test_named(x, type = "named")) {
+    cli::cli_abort(
+      message = "Input must be a named list.",
+      call = NULL
+    )
+  }
 }

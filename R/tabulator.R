@@ -1,18 +1,25 @@
-#' <Add Title>
+#' Tabulator table
 #'
-#' <Add Description>
+#' Renders a tabulator table
 #'
 #' @import htmlwidgets
 #'
 #' @export
-tabulator <- function(data = NULL, width = NULL, height = NULL, elementId = NULL) {
-  data <- check_for_valid_column_names(data)
+tabulator <- function(
+  data = NULL,
+  width = NULL,
+  height = NULL,
+  elementId = NULL,
+  nested_field_separator = ".."
+) {
+  data <- check_for_valid_column_names(data, nested_field_separator)
   # forward options using x
   params = list(
     data = data
   )
   attr(params, 'TOJSON_ARGS') <- list(dataframe = "rows")
   # create widget
+  print("running tabulator")
   htmlwidgets::createWidget(
     name = 'tabulator',
     x = params,
@@ -20,7 +27,8 @@ tabulator <- function(data = NULL, width = NULL, height = NULL, elementId = NULL
     height = height,
     package = 'tabulator',
     elementId = elementId
-  )
+  ) |>
+    add_default_table_options()
 }
 
 #' Shiny bindings for tabulator
@@ -47,6 +55,8 @@ tabulatorOutput <- function(outputId, width = '100%', height = '400px'){
 #' @rdname tabulator-shiny
 #' @export
 renderTabulator <- function(expr, env = parent.frame(), quoted = FALSE) {
-  if (!quoted) { expr <- substitute(expr) } # force quoted
+  if (!quoted) {
+    expr <- substitute(run_checks(expr))
+  }
   htmlwidgets::shinyRenderWidget(expr, tabulatorOutput, env, quoted = TRUE)
 }

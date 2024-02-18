@@ -19,9 +19,12 @@ HTMLWidgets.widget({
           data: x.data,
           layout: x.column_layout_mode,
           filterMode: "remote",
+          nestedFieldSeparator: "..",
           layoutColumnsOnNewData: x.layout_columns_on_new_data,
+          ...parseTableOptions(x),
           ...parsePagination(x),
-          ...parseColumns(x)
+          ...parseColumns(x),
+          ...parseSortMode(x),
         });
         window.pala = table;
 
@@ -53,8 +56,22 @@ const parsePagination = serializedData => {
 }
 
 const parseColumns = x => {
+  const isPaginationModeRemote = x.paginationMode === "remote";
   return {
     autoColumns: !!x.columns ? false : true,
-    columns: x.columns
+    columns: (!isPaginationModeRemote && !!x.columns) ? x.columns : []
   }
+}
+
+const parseSortMode = x => {
+  const hasSortMode = !!x.sortMode;
+  const isPaginationModeRemote = x.paginationMode === "remote";
+  const statusSortMode = (hasSortMode || isPaginationModeRemote) ? "remote" : "local";
+  return {
+    sortMode: statusSortMode
+  }
+}
+
+const parseTableOptions = x => {
+  return x.table_options
 }

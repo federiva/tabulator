@@ -6,10 +6,7 @@ library(RSQLite)
 temp_sqlite_path <- file.path(tempdir(), "iris.sqlite")
 # Create DB
 con <- dbConnect(SQLite(), dbname = temp_sqlite_path)
-# Modifying column names for using them in tabulator
-modified_iris <- iris
-colnames(modified_iris) <- stringi::stri_replace_all(str = colnames(iris), replacement = "_", regex = "\\.")
-dbWriteTable(con, "iris", modified_iris)
+dbWriteTable(con, "iris", iris)
 
 # Helper function to paginate results using SQL
 get_paginated_data <- function(page, page_size = 10) {

@@ -78,12 +78,12 @@ filter_data_on_request <- function(request_obj, data_in) {
   if (length(query_string) == 0) {
     return()
   }
-  data_in <- filter_data(data_in, query_string)
+  data_in <- filter_data(data_in, query_string) |> sort_data(query_string)
   page_number <- as.numeric(query_string$page)
   page_size <- as.numeric(query_string$size)
   start_row <- (page_number - 1) * page_size + 1
   end_row <- page_number * page_size
-  # Subset the dataframe based on the calculated indices
+  # Subset the dataframe based on the calculated indexes
   data_in[start_row:min(end_row, nrow(data_in)), ]
 }
 

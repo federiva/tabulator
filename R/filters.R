@@ -73,8 +73,7 @@ run_filter_func <- function(data_in, type, field, value) {
       "Error: {cond$message}.\n",
       "Returning the unfiltered dataset."
     )
-    browser()
-    rlang::warn(
+    warn(
       message = message,
       class = "ErrorFilter"
     )
