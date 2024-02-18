@@ -4,13 +4,19 @@ default_table_options <- list(
   )
 )
 
+#' Add table level options to a tabulator object
+#' @param tabulator_object An object of class tabulator
+#' @param ... A list of options to be added as named parameters
+#' @importFrom rlang list2
 tabulator_options <- function(tabulator_object, ...) {
-  table_options <- rlang::list2(...) |>
+  table_options <- list2(...) |>
     test_for_valid_table_options()
   tabulator_object$x$table_options <- table_options
   tabulator_object
 }
 
+#' Checks for valid table options and returns a list of valid options
+#' @param table_options A list of options to be checked
 #' @importFrom cli cli_warn
 test_for_valid_table_options <- function(table_options) {
   assert_is_named(table_options)

@@ -6,7 +6,9 @@ library(tabulator)
 input_data <- data.frame(
   `id..a` = c(1:5),
   `id..b` = c(6:10),
-  idc = c(11:15)
+  idc = c(11:15),
+  `id__a` = c(1:5),
+  `id___ax` = c(1:5)
 )
 ui <- fluidPage(
   tabulatorOutput("table")
@@ -25,3 +27,4 @@ server <- function(input, output, session) {
 }
 
 shinyApp(ui, server)
+

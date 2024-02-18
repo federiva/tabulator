@@ -14,7 +14,7 @@ rlang::on_load(
 #'
 #' @seealso [tabulator issue](https://github.com/olifolkerd/tabulator/issues/2911)
 #'
-#' @importFrom cli cli_warn
+#' @importFrom cli cli_alert_warning
 #' @importFrom glue glue
 #' @importFrom stringr str_escape
 #' @noRd
@@ -22,33 +22,16 @@ check_for_valid_column_names <- function(data, nested_field_separator) {
   columns <- colnames(data)
   test <- any(grepl(str_escape(nested_field_separator), columns))
   if (test) {
-    invalid_columns <- grep("\\.", columns, value = TRUE)
-    invalid_columns_message <- glue(
-      "The columns {paste(invalid_columns, collapse = ', ')} will not be rendered as ", 
-      "Tabulator does not support the use of characters in the column names that are using",
-      "the same string as the nested_field_separator argument"
+    invalid_columns <- grep(str_escape(nested_field_separator), columns, value = TRUE)
+    cli_alert_warning(
+      text = c(
+        "The {invalid_columns} column{?s} will not be rendered as ",
+        "this column{?s} contain characters that are the same as the `nested_field_separator`. ",
+        "Please change the column names or the nestedFieldSeparator to avoid this issue.",
+        "See {.fun tabulator::tabulator_options} to learn more."
+      )
     )
-    cli_warn(
-      message = c(
-        invalid_columns_message,
-        "!" = "The periods in the column names will be automatically converted to underscores.",
-        "i" = "See {.url https://github.com/olifolkerd/tabulator/issues/2911} for reference"
-      ),
-      class = "WrongColumnNames"
-    )
-    datas <- convert_dots_to_underscores(data)
   }
-  data
-}
-
-#' @importFrom stringi stri_replace_all
-convert_dots_to_underscores <- function(data) {
-  colnames(data) <- stri_replace_all(
-    str = colnames(data),
-    replacement = "_",
-    regex = "\\."
-  )
-  data
 }
 
 #' @importFrom checkmate test_named

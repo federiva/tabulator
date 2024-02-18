@@ -12,14 +12,12 @@ tabulator <- function(
   elementId = NULL,
   nested_field_separator = ".."
 ) {
-  data <- check_for_valid_column_names(data, nested_field_separator)
   # forward options using x
   params = list(
     data = data
   )
   attr(params, 'TOJSON_ARGS') <- list(dataframe = "rows")
   # create widget
-  print("running tabulator")
   htmlwidgets::createWidget(
     name = 'tabulator',
     x = params,
