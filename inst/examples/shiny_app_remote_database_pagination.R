@@ -15,6 +15,19 @@ get_paginated_data <- function(page, page_size = 10) {
   dbGetQuery(con, query)
 }
 
+paginated_select <- function(.data, limit = 10, offset = 5, ...) {
+  query <- .data |>
+    select(...)
+  # Convert the query to SQL
+  sql_query <- sql_render(query)
+  custom_sql <- paste0(sql_query, " LIMIT ", limit, " OFFSET ", offset)
+  # Use `tbl` with the custom SQL to create a new lazy query
+  tbl(.data$src$con, sql(custom_sql))
+}
+
+tbl(con, "iris") |>
+  paginated_select("Sepal.Length", "Petal.Length", limit = 5, offset = 0)
+
 # Define a custom handler to pass to tabulator to handle the queries that
 # R will send to the DB
 custom_handler <- function(data, req) {
