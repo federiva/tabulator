@@ -18,8 +18,8 @@ HTMLWidgets.widget({
         const table = new Tabulator(`#${el.id}`, {
           data: x.data,
           layout: x.column_layout_mode,
-          filterMode: "remote",
-          nestedFieldSeparator: "..",
+          filterMode: "remote", // TODO Remove this default
+          nestedFieldSeparator: "..", // TODO Remove this default
           layoutColumnsOnNewData: x.layout_columns_on_new_data,
           ...parseTableOptions(x),
           ...parsePagination(x),
@@ -57,9 +57,11 @@ const parsePagination = serializedData => {
 
 const parseColumns = x => {
   const isPaginationModeRemote = x.paginationMode === "remote";
+  console.log(isPaginationModeRemote)
+  console.log((!isPaginationModeRemote && !!x.columns) ? x.columns : [])
   return {
     autoColumns: !!x.columns ? false : true,
-    columns: (!isPaginationModeRemote && !!x.columns) ? x.columns : []
+    columns: (!isPaginationModeRemote || !!x.columns) ? x.columns : []
   }
 }
 

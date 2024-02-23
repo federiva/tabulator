@@ -18,24 +18,24 @@ server <- function(input, output, session) {
           list(
             tabulator_column(
               title = "Petal Length",
-              field = "Petal_Length",
+              field = "Petal.Length",
               headerFilter = TRUE
             ),
             tabulator_column(
               title = "Petal Width",
-              field = "Petal_Width",
+              field = "Petal.Width",
               headerFilter = TRUE,
               headerFilterFunc = ">="
             ),
             tabulator_column(
               title = "Sepal Length",
-              field = "Sepal_Length",
+              field = "Sepal.Length",
               headerFilter = TRUE,
               headerFilterFunc = "<="
             ),
             tabulator_column(
               title = "Sepal Width",
-              field = "Sepal_Width",
+              field = "Sepal.Width",
               headerFilter = TRUE,
               headerFilterFunc = "!="
             )
