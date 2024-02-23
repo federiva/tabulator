@@ -1,5 +1,6 @@
 devtools::load_all()
 library(shiny)
+library(dplyr)
 library(tabulator)
 library(RSQLite)
 library(dplyr)
@@ -20,23 +21,11 @@ con <- dbConnect(SQLite(), dbname = temp_sqlite_path)
 dbWriteTable(con, "iris", iris)
 
 # Helper function to paginate results using SQL
-get_paginated_data <- function(page, page_size = 10) {
+get_paginated_data <- function(src_tbl, page, page_size = 10) {
   offset <- (page - 1) * page_size
-  tbl(con, "iris") |>
-    paginated_select("Sepal.Length", "Petal.Length", limit = page_size, offset = offset)
-
+  src_tbl |>
+    paginated_select(limit = page_size, offset = offset)
 }
-
-paginated_select <- function(.data, limit = 10, offset = 5, ...) {
-  query <- .data |>
-    dplyr::select(...)
-  # Convert the query to SQL
-  sql_query <- dbplyr::sql_render(query)
-  custom_sql <- paste0(sql_query, " LIMIT ", limit, " OFFSET ", offset)
-  # Use `tbl` with the custom SQL to create a new lazy query
-  dplyr::tbl(.data$src$con, sql(custom_sql))
-}
-
 
 # Define a custom handler to pass to tabulator to handle the queries that
 # R will send to the DB
@@ -45,8 +34,10 @@ custom_handler <- function(data, req) {
   print(query_string)
   page_size <- as.numeric(query_string$size)
   page <- as.numeric(query_string$page)
-  db_data <- get_paginated_data(page, page_size) |> dplyr::collect()
-  last_page <- ceiling(dbGetQuery(con, "SELECT COUNT() as count FROM iris") / page_size)
+  db_data <- tbl(con, "iris") |>
+    get_paginated_data(page = page, page_size = page_size) |>
+    collect()
+  last_page <- get_total_pages(tbl(con, "iris"), page_size)
   serialized_data <- jsonlite::toJSON(
     list(
       data = db_data,
