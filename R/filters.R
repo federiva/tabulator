@@ -52,20 +52,23 @@ extract_unique_numbers_from_query_string <- function(query_string_names) {
 run_filter_func <- function(data_in, type, field, value) {
   # TODO Fede Oct 15 / Extract the logic of callback functions to a similar logic applied in dynamic_symbol_filter
   tryCatch({
+    # Parse pattern to allow modified patterns when working with dbplyr
+    # See https://www.tidyverse.org/blog/2023/10/dbplyr-2-4-0/#new-translations
+    pattern <- parse_pattern(data_in, type, value)
     if (type == "like") {
       data_in |>
-        filter(str_detect(string = !!sym(field), pattern = value))
+        filter(str_detect(string = !!sym(field), pattern = pattern))
     } else if (type == "ends") {
       data_in |>
-        filter(str_ends(string = !!sym(field), pattern = value))
+        filter(str_ends(string = !!sym(field), pattern = pattern))
     } else if (type == "regex") {
       data_in |>
-        filter(grepl(x = !!sym(field), pattern = value))
+        filter(grepl(x = !!sym(field), pattern = pattern))
     } else if (type == "starts") {
       data_in |>
-        filter(str_starts(!!sym(field), value))
+        filter(str_starts(string = !!sym(field), pattern = pattern))
     } else if (is_symbol_operator(type)) {
-      dynamic_symbol_filter(data_in, type, field, value)
+      dynamic_symbol_filter(data_in, type, field, pattern)
     }
   }, error = function(cond) {
     message <- glue(
@@ -81,6 +84,20 @@ run_filter_func <- function(data_in, type, field, value) {
   })
 }
 
+#' @importFrom stringr fixed
+parse_pattern <- function(data_in, type, value) {
+  if (!inherits(data_in, "tbl_lazy")) {
+    value
+  } else {
+    switch(
+      type,
+      "like" = fixed(value),
+      "ends" = fixed(value),
+      "starts" = fixed(value),
+      value
+    )
+  }
+}
 
 is_symbol_operator <- function(type) {
   type %in% names(available_symbol_operators)
@@ -101,7 +118,7 @@ dynamic_symbol_filter <- function(data_in, type, field, value) {
   expr_str <- glue("!!{field} {operator} '{value}'")
   expr <- rlang::parse_expr(expr_str)
   data_in |>
-    filter(rlang::eval_tidy(expr))
+    filter(rlang::parse_expr(expr_str))
 }
 
 filter_data <- function(data_in, query_string) {

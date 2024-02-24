@@ -6,19 +6,21 @@ library(RSQLite)
 library(dplyr)
 library(dbplyr)
 
+example_data <- data.frame(
+  numbers_eq = c(1:10),
+  numbers_gt = c(1:10),
+  numbers_lt = c(1:10),
+  numbers_ne = c(1:10),
+  numbers_gte = c(1:10),
+  numbers_lte = c(1:10),
+  letters_eq = letters[1:10],
+  letters_in = letters[1:10]
+)
 
-# TODO Feb 19
-# 1. Implement header filters
-# 2. Implement header sorters
-# 3. Calculate last page dynamically. Add feature to calculate the last page
-# when some filtering is added to the data. For example, when we are using
-# header filters for a given column then it may occur that the amount of data
-# returned is less pages than the
-
-temp_sqlite_path <- file.path(tempdir(), "iris.sqlite")
+temp_sqlite_path <- file.path(tempdir(), "example_data")
 # Create DB
 con <- dbConnect(SQLite(), dbname = temp_sqlite_path)
-dbWriteTable(con, "iris", iris)
+dbWriteTable(con, "example_data", example_data)
 
 # Helper function to paginate results using SQL
 get_paginated_data <- function(src_tbl, page, page_size = 10) {
@@ -31,16 +33,20 @@ get_paginated_data <- function(src_tbl, page, page_size = 10) {
 # R will send to the DB
 custom_handler <- function(data, req) {
   query_string <- parseQueryString(req$QUERY_STRING)
-  print(query_string)
   page_size <- as.numeric(query_string$size)
   page <- as.numeric(query_string$page)
-  db_data <- tbl(con, "iris") |>
+  db_data <- tbl(con, "example_data") |>
+    filter_data(query_string = query_string) |>
+    sort_data(query_string = query_string)
+
+  paginated_data <- db_data |>
     get_paginated_data(page = page, page_size = page_size) |>
     collect()
-  last_page <- get_total_pages(tbl(con, "iris"), page_size)
+
+  last_page <- get_total_pages(db_data, page_size)
   serialized_data <- jsonlite::toJSON(
     list(
-      data = db_data,
+      data = paginated_data,
       last_page = last_page[[1]]
     ),
     dataframe = "rows"
@@ -63,14 +69,53 @@ server <- function(input, output, session) {
       column_layout_mode("fitColumns") |>
       tabulator_columns(
         list(
+# letters_eq
+# letters_in
           tabulator_column(
-            title = "Petal Length",
-            field = "Petal.Length",
-            headerFilter = TRUE
+            title = "let =",
+            field = "letters_eq",
+            headerFilter = TRUE,
+            headerFilterFunc = "="
           ),
           tabulator_column(
-            title = "Sepal Length",
-            field = "Sepal.Length",
+            title = "let in",
+            field = "letters_in",
+            headerFilter = TRUE,
+            headerFilterFunc = "in"
+          ),
+          tabulator_column(
+            title = "eq =",
+            field = "numbers_eq",
+            headerFilter = TRUE,
+            headerFilterFunc = "="
+          ),
+          tabulator_column(
+            title = "neq !=",
+            field = "numbers_ne",
+            headerFilter = TRUE,
+            headerFilterFunc = "!="
+          ),
+          tabulator_column(
+            title = "gt >",
+            field = "numbers_gt",
+            headerFilter = TRUE,
+            headerFilterFunc = ">"
+          ),
+          tabulator_column(
+            title = "gte >=",
+            field = "numbers_gte",
+            headerFilter = TRUE,
+            headerFilterFunc = ">="
+          ),
+          tabulator_column(
+            title = "lt <",
+            field = "numbers_lt",
+            headerFilter = TRUE,
+            headerFilterFunc = "<"
+          ),
+          tabulator_column(
+            title = "lte <=",
+            field = "numbers_lte",
             headerFilter = TRUE,
             headerFilterFunc = "<="
           )
