@@ -9,8 +9,7 @@ tabulator <- function(
   data = NULL,
   width = NULL,
   height = NULL,
-  elementId = NULL,
-  nested_field_separator = ".."
+  elementId = NULL
 ) {
   # forward options using x
   params = list(

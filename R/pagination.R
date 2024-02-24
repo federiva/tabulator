@@ -154,3 +154,34 @@ set_pagination_mode <- function(tabulator_object, mode, request_handler = NULL) 
   }
   tabulator_object
 }
+
+#' Default Request Handler for SQLite
+#' @importFrom dplyr tbl collect
+#' @importFrom jsonlite toJSON
+#' @importFrom shiny httpResponse
+#' @export
+sqlite_request_handler <- function(data, req) {
+  query_string <- parseQueryString(req$QUERY_STRING)
+  page_size <- as.numeric(query_string$size)
+  page <- as.numeric(query_string$page)
+  db_data <- tbl(con, "example_data") |>
+    filter_data(query_string = query_string) |>
+    sort_data(query_string = query_string)
+
+  paginated_data <- db_data |>
+    paginated_select(limit = page_size, page = page) |>
+    collect()
+
+  last_page <- get_total_pages(db_data, page_size)
+  serialized_data <- toJSON(
+    list(
+      data = paginated_data,
+      last_page = last_page[[1]]
+    ),
+    dataframe = "rows"
+  )
+  httpResponse(
+    content_type = "application/json",
+    content = serialized_data
+  )
+}

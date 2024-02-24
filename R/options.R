@@ -1,6 +1,9 @@
 default_table_options <- list(
   nestedFieldSeparator = list(
     value = ".."
+  ),
+  layout = list(
+    value = "fitData"
   )
 )
 

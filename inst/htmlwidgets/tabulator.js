@@ -61,7 +61,7 @@ const parseColumns = x => {
   console.log((!isPaginationModeRemote && !!x.columns) ? x.columns : [])
   return {
     autoColumns: !!x.columns ? false : true,
-    columns: (!isPaginationModeRemote || !!x.columns) ? x.columns : []
+    columns: (!isPaginationModeRemote || !!x.columns) ? x.columns ? x.columns : [] : []
   }
 }
 

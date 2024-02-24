@@ -22,41 +22,6 @@ temp_sqlite_path <- file.path(tempdir(), "example_data")
 con <- dbConnect(SQLite(), dbname = temp_sqlite_path)
 dbWriteTable(con, "example_data", example_data)
 
-# Helper function to paginate results using SQL
-get_paginated_data <- function(src_tbl, page, page_size = 10) {
-  offset <- (page - 1) * page_size
-  src_tbl |>
-    paginated_select(limit = page_size, offset = offset)
-}
-
-# Define a custom handler to pass to tabulator to handle the queries that
-# R will send to the DB
-custom_handler <- function(data, req) {
-  query_string <- parseQueryString(req$QUERY_STRING)
-  page_size <- as.numeric(query_string$size)
-  page <- as.numeric(query_string$page)
-  db_data <- tbl(con, "example_data") |>
-    filter_data(query_string = query_string) |>
-    sort_data(query_string = query_string)
-
-  paginated_data <- db_data |>
-    get_paginated_data(page = page, page_size = page_size) |>
-    collect()
-
-  last_page <- get_total_pages(db_data, page_size)
-  serialized_data <- jsonlite::toJSON(
-    list(
-      data = paginated_data,
-      last_page = last_page[[1]]
-    ),
-    dataframe = "rows"
-  )
-  httpResponse(
-    content_type = "application/json",
-    content = serialized_data
-  )
-}
-
 ui <- fluidPage(
   tabulatorOutput("table")
 )
@@ -69,8 +34,6 @@ server <- function(input, output, session) {
       column_layout_mode("fitColumns") |>
       tabulator_columns(
         list(
-# letters_eq
-# letters_in
           tabulator_column(
             title = "let =",
             field = "letters_eq",
@@ -122,9 +85,9 @@ server <- function(input, output, session) {
         )
       ) |>
       pagination(
-        pagination_size = 15,
+        pagination_size = 5,
         mode = "remote",
-        request_handler = custom_handler
+        request_handler = sqlite_request_handler
       ) |>
       set_layout_columns_on_new_data()
   })

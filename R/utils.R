@@ -49,9 +49,10 @@ assert_is_named <- function(x) {
 #' Helper function to get paginated data
 #' @importFrom dbplyr sql_render
 #' @importFrom dplyr select tbl everything sql
-paginated_select <- function(.data, limit = 10, offset = 5, ...) {
+paginated_select <- function(.data, limit = 10, page = 1, ...) {
   query <- .data |>
     select(if(length(list(...)) > 0) ... else everything())
+  offset <- (page - 1) * limit
   sql_query <- sql_render(query)
   custom_sql <- paste0(sql_query, " LIMIT ", limit, " OFFSET ", offset)
   tbl(.data$src$con, sql(custom_sql))
