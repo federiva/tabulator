@@ -4,13 +4,7 @@
 \alias{tabulator}
 \title{Tabulator table}
 \usage{
-tabulator(
-  data = NULL,
-  width = NULL,
-  height = NULL,
-  elementId = NULL,
-  nested_field_separator = ".."
-)
+tabulator(data = NULL, width = NULL, height = NULL, elementId = NULL)
 }
 \description{
 Renders a tabulator table

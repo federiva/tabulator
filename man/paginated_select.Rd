@@ -4,7 +4,7 @@
 \alias{paginated_select}
 \title{Helper function to get paginated data}
 \usage{
-paginated_select(.data, limit = 10, offset = 5, ...)
+paginated_select(.data, limit = 10, page = 1, ...)
 }
 \description{
 Helper function to get paginated data

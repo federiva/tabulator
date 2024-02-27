@@ -1,4 +1,4 @@
-
+library(tabulator)
 test_that(
   "Some columns are not rendered when nestedFieldSeparator is set to '__' as well as the column names", {
   skip_on_cran()
@@ -21,7 +21,6 @@ test_that(
   )
   app <- AppDriver$new(shiny_app, name = "nested_field_separator")
   session <- selenider_session(driver = app)
-  browser()
   # Expect five columns to be rendered
   expect_equal(
     ss(".tabulator-col-title") |>

@@ -33,7 +33,6 @@ ui <- fluidPage(
 server <- function(input, output, session) {
 
     output$table <- renderTabulator({
-      browser()
       tabulator(input_data) |>
         tabulator_options(
           nestedFieldSeparator = "__"

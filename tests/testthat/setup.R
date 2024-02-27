@@ -1,3 +1,7 @@
 library(testthat)
 library(shinytest2)
 library(selenider)
+library(shiny)
+library(RSQLite)
+library(dplyr)
+library(dbplyr)

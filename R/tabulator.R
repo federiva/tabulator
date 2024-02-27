@@ -53,7 +53,7 @@ tabulatorOutput <- function(outputId, width = '100%', height = '400px'){
 #' @export
 renderTabulator <- function(expr, env = parent.frame(), quoted = FALSE) {
   if (!quoted) {
-    expr <- substitute(run_checks(expr))
+    expr <- substitute(tabulator:::run_checks(expr))
   }
   htmlwidgets::shinyRenderWidget(expr, tabulatorOutput, env, quoted = TRUE)
 }

@@ -20,7 +20,8 @@ example_data <- data.frame(
 temp_sqlite_path <- file.path(tempdir(), "example_data")
 # Create DB
 con <- dbConnect(SQLite(), dbname = temp_sqlite_path)
-dbWriteTable(con, "example_data", example_data)
+dbWriteTable(con, "example_data", example_data, overwrite = TRUE)
+db_data <- tbl(con, "example_data")
 
 ui <- fluidPage(
   tabulatorOutput("table")
@@ -87,7 +88,7 @@ server <- function(input, output, session) {
       pagination(
         pagination_size = 5,
         mode = "remote",
-        request_handler = sqlite_request_handler
+        request_handler = use_sqlite_request_handler(db_data)
       ) |>
       set_layout_columns_on_new_data()
   })
