@@ -62,7 +62,6 @@ get_available_pagination_modes <- function() {
 #' @export
 pagination <- function(tabulator_object, mode = 'local', pagination_size = 10, pagination_initial_page = 1, request_handler = NULL) {
   if (test_for_valid_pagination_mode(mode)) {
-    browser()
     tabulator_object$x$pagination <- TRUE
     tabulator_object <- set_pagination_mode(tabulator_object, mode, request_handler)
     tabulator_object$x$ajaxURL <- get_ajax_url(mode)
@@ -162,14 +161,10 @@ set_pagination_mode <- function(tabulator_object, mode, request_handler = NULL) 
 #' @importFrom shiny httpResponse
 #' @export
 sqlite_request_handler <- function(tbl_db) {
-  print("a")
-  print(tbl_db)
-  print("b")
   function(data, req) {
     query_string <- parseQueryString(req$QUERY_STRING)
     page_size <- as.numeric(query_string$size)
     page <- as.numeric(query_string$page)
-    print("c")
     db_data <- tbl_db |>
       filter_data(query_string = query_string) |>
       sort_data(query_string = query_string)

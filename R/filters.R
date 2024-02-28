@@ -109,16 +109,14 @@ match_symbol_operator <- function(type) {
 }
 
 #' @importFrom dplyr filter
-#' @importFrom rlang parse_expr eval_tidy
+#' @importFrom rlang parse_expr
 #' @importFrom glue glue
-#' @noRd
 dynamic_symbol_filter <- function(data_in, type, field, value) {
   operator <- match_symbol_operator(type)
-  expr_str <- paste0("!!sym(field) ", operator, " value")
-  expr_str <- glue("!!{field} {operator} '{value}'")
-  expr <- rlang::parse_expr(expr_str)
-  data_in |>
+  expr_str <- glue("{field} {operator} '{value}'")
+  filtered_data <- data_in |>
     filter(rlang::parse_expr(expr_str))
+  filtered_data
 }
 
 filter_data <- function(data_in, query_string) {
@@ -136,6 +134,3 @@ filter_data <- function(data_in, query_string) {
   }
   data_in
 }
-
-# cola <- parse_filters_from_query_string(query_string)
-

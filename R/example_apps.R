@@ -1,6 +1,8 @@
 get_valid_app_names <- function() {
   list(
-    nested_field_separator = system.file("examples", "shiny_app_options_nested_field_separator.R", package = "tabulator")
+    nested_field_separator = system.file("examples", "shiny_app_options_nested_field_separator.R", package = "tabulator"),
+    remote_db_pagination = system.file("examples", "shiny_app_remote_database_pagination.R", package = "tabulator"),
+    remote_api_pagination = system.file("examples", "shiny_app_remote_api_pagination.R", package = "tabulator")
   )
 }
 

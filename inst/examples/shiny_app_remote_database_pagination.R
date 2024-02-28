@@ -14,14 +14,12 @@ example_data <- data.frame(
   numbers_gte = c(1:10),
   numbers_lte = c(1:10),
   letters_eq = letters[1:10],
-  letters_in = letters[1:10]
+  letters_in = c("abc", "def", "ghi", "jkl", "mnñ", "opq", "rst", "uvw", "xyz", "abc")
 )
 
 temp_sqlite_path <- file.path(tempdir(), "example_data")
 # Create DB
-con <- dbConnect(SQLite(), dbname = temp_sqlite_path)
-dbWriteTable(con, "example_data", example_data, overwrite = TRUE)
-db_data <- tbl(con, "example_data")
+
 
 ui <- fluidPage(
   tabulatorOutput("table")
@@ -30,6 +28,10 @@ ui <- fluidPage(
 server <- function(input, output, session) {
   # When the data is obtained from a remote source then the data argument
   # of the tabulator function could be empty/NULL
+  con <- dbConnect(SQLite(), dbname = temp_sqlite_path)
+  dbWriteTable(con, "example_data", example_data, overwrite = TRUE)
+  db_data <- tbl(con, "example_data")
+
   output$table <- renderTabulator({
     tabulator() |>
       column_layout_mode("fitColumns") |>
