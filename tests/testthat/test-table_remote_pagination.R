@@ -34,34 +34,45 @@ test_that(
     # Taking a screenshot to force the visibility of a button
     # TODO (Feb 2024) Try to reproduce this issue to submit an issue to the selenider repo
     selenider::take_screenshot(tempfile(fileext = ".png"))
-    # Check that the sorter arrow button exists and we can click it
-    sorter_arrow <- selenider::s(xpath = ".//div[@tabulator-field='numbers_ne']//div[@class='tabulator-arrow']")
+    # Check that the next button exists and we can click it
+    next_button <- selenider::s(xpath = ".//span[@class='tabulator-paginator']//button[@data-page='next']")
+    next_button |>
+      elem_expect(has_text("Next"))
 
-    selenider::elem_click(x = sorter_arrow)
+    selenider::elem_click(x = next_button)
     Sys.sleep(2)
 
-    # The table is only showing values in increasing order
-    all_values_in_column <- ss(xpath = ".//div[@class='tabulator-table']//div[@tabulator-field='numbers_ne']") |>
+    # Check that the fourth column (eq =) has the expected values after clicking
+    # the next button to go to the second page
+
+    # The table is only showing values from the second page
+    all_values_in_column <- ss(xpath = ".//div[@class='tabulator-table']//div[@tabulator-field='numbers_eq']") |>
+      lapply(elem_text) |>
+      unlist()
+
+    expect_true(
+      all(c("6", "7", "8", "9", "10") == all_values_in_column)
+    )
+
+    # Go back to the first page and check the values
+    # Check that the prev button exists and we can click it
+    prev_button <- selenider::s(xpath = ".//span[@class='tabulator-paginator']//button[@data-page='prev']")
+    prev_button |>
+      elem_expect(has_text("Prev"))
+
+    selenider::elem_click(x = prev_button)
+    Sys.sleep(2)
+
+    # Check that the fourth column (eq =) has the expected values after clicking
+    # the prev button to go to the first page
+
+    # The table is only showing values from the first page
+    all_values_in_column <- ss(xpath = ".//div[@class='tabulator-table']//div[@tabulator-field='numbers_eq']") |>
       lapply(elem_text) |>
       unlist()
 
     expect_true(
       all(c("1", "2", "3", "4", "5") == all_values_in_column)
-    )
-
-    # Click the arrow sorter again
-    selenider::elem_click(x = sorter_arrow)
-    Sys.sleep(2)
-    # Check that the fourth column (eq =) has the expected values after clicking
-    # the next button to go to the second page
-
-    # The table is only showing values in decreasing order
-    all_values_in_column <- ss(xpath = ".//div[@class='tabulator-table']//div[@tabulator-field='numbers_ne']") |>
-      lapply(elem_text) |>
-      unlist()
-
-    expect_true(
-      all(c("10", "9", "8", "7", "6") == all_values_in_column)
     )
 
 })
