@@ -4,7 +4,7 @@
 \alias{run_example_app}
 \title{Run an example app}
 \usage{
-run_example_app(app_name)
+run_example_app(app_name, port = 9999)
 }
 \description{
 Run an example app

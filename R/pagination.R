@@ -84,7 +84,11 @@ filter_data_on_request <- function(request_obj, data_in) {
   start_row <- (page_number - 1) * page_size + 1
   end_row <- page_number * page_size
   # Subset the dataframe based on the calculated indexes
-  data_in[start_row:min(end_row, nrow(data_in)), ]
+  if (nrow(data_in) == 0) {
+    data_in
+  } else {
+    data_in[start_row:min(end_row, nrow(data_in)), ]
+  }
 }
 
 

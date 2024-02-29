@@ -60,7 +60,7 @@ paginated_select <- function(.data, limit = 10, page = 1, ...) {
 
 
 #' Helper function to get total number of pages
-#' @importFrom  dplyr count
+#' @importFrom  dplyr count collect pull
 get_total_pages <- function(.data, page_size = 10) {
   numerator <- .data |>
     count() |>

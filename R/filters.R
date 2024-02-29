@@ -115,7 +115,7 @@ dynamic_symbol_filter <- function(data_in, type, field, value) {
   operator <- match_symbol_operator(type)
   expr_str <- glue("{field} {operator} '{value}'")
   filtered_data <- data_in |>
-    filter(rlang::parse_expr(expr_str))
+    filter(!!rlang::parse_expr(expr_str))
   filtered_data
 }
 
