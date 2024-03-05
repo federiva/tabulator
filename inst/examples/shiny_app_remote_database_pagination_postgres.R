@@ -20,6 +20,13 @@ example_data <- data.frame(
   letters_ends = c("abc", "def", "ghi", "jkl", "mnñ", "opq", "rst", "uvw", "xyz", "abc"),
   letters_starts = c("abc", "def", "ghi", "jkl", "mnñ", "opq", "rst", "uvw", "xyz", "abc")
 )
+# Check for missing env vars
+if (Sys.getenv("POSTGRES_USER") == "") {
+  stop("Missing POSTGRES_USER env var, edit your .Renviron file")
+}
+if (Sys.getenv("POSTGRES_PASSWORD") == "") {
+  stop("Missing POSTGRES_PASSWORD env var, edit your .Renviron file")
+}
 # Database connection details
 dbname <- Sys.getenv("POSTGRES_DB", "tabulator_test")
 host <- Sys.getenv("POSTGRES_HOST", "localhost")
@@ -109,7 +116,7 @@ server <- function(input, output, session) {
             field = "letters_ends",
             headerFilter = TRUE,
             headerFilterFunc = "ends"
-          ),          
+          ),
           tabulator_column(
             title = "starts",
             field = "letters_starts",
