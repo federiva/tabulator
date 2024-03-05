@@ -4,12 +4,19 @@ default_table_options <- list(
   ),
   layout = list(
     value = "fitData"
+  ),
+  movableColumns = list(
+    value = FALSE
+  ),
+  resizableColumnFit = list(
+    value = TRUE
   )
 )
 
 #' Add table level options to a tabulator object
 #' @param tabulator_object An object of class tabulator
 #' @param ... A list of options to be added as named parameters
+#' @seealso [tabulator documentation](https://tabulator.info/docs/5.6/layout)
 #' @importFrom rlang list2
 tabulator_options <- function(tabulator_object, ...) {
   table_options <- list2(...) |>
@@ -26,6 +33,8 @@ test_for_valid_table_options <- function(table_options) {
   valid_table_options_names <- names(default_table_options)
   invalid_options <- Filter(function(x) !x %in% valid_table_options_names, names(table_options))
   valid_options <- Filter(function(x) x %in% valid_table_options_names, names(table_options))
+  all_options <- unique(c(valid_options, valid_table_options_names))
+
   if (length(invalid_options) > 0) {
     cli_warn(
       c(
@@ -34,8 +43,14 @@ test_for_valid_table_options <- function(table_options) {
       )
     )
   }
-  if (length(valid_options) > 0) {
-    table_options[valid_options]
+  if (length(all_options) > 0) {
+    # Ensure that if default values were not provided then we use the default
+    # values for these options
+    default_options <- default_table_options[setdiff(all_options, valid_options)]
+    if (length(default_options) > 0) {
+      default_options <- lapply(default_options, function(x) x$value)
+    }
+    append(default_options, table_options[valid_options])
   } else {
     list()
   }
@@ -50,13 +65,4 @@ get_valid_table_options <- function() {
       "i" = "Valid table options are: {paste(names(default_table_options), collapse = ', ')}"
     )
   )
-}
-
-add_default_table_options <- function(tabulator_object) {
-  for (default_value_name in names(default_table_options)) {
-    if (!default_value_name %in% names(tabulator_object$x$table_options)) {
-      tabulator_object$x$table_options[[default_value_name]] <- default_table_options[[default_value_name]]$value
-    }
-  }
-  tabulator_object
 }
