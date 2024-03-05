@@ -19,20 +19,26 @@ example_data <- data.frame(
 events_list <- c(
   "headerClick", "headerDblClick", "headerContext", "headerTap", "headerDblTap",
   "headerTapHold", "headerMouseEnter", "headerMouseLeave", "headerMouseOver",
-  "headerMouseOut", "headerMouseMove", "headerMouseDown", "headerMouseUp"
+  "headerMouseOut", "headerMouseMove", "headerMouseDown", "headerMouseUp",
+  "columnMoved", "columnResized", "columnTitleChanged", "columnVisibilityChanged"
 )
 
 ui <- fluidPage(
   tabulatorOutput("table"),
-  selectInput(
-    inputId = "event",
-    label = "Select an event",
-    choices = events_list
-  ),
   div(
-    class = "events-container",
-    h4("Events Output"),
-    textOutput("table_events")
+    class = "columns-actions-container",
+    style = "margin-top: 1rem;",
+    actionButton("toggle_letters_eq", "Toggle let = column"),
+    div(
+      class = "events-container",
+      selectInput(
+        inputId = "event",
+        label = "Select an event",
+        choices = events_list
+      ),
+      h4("Events Output"),
+      textOutput("table_events")
+    )
   )
 )
 
@@ -41,9 +47,68 @@ server <- function(input, output, session) {
     # Latest event reactive Value
     latest_event <- reactiveVal()
 
+    observeEvent(input$toggle_letters_eq, {
+      toggle_column_by_field(
+        table_id = "table",
+        field = "letters_eq",
+        session = session
+      )
+    })
+
     # Subscribe to events
     output$table <- renderTabulator({
       tabulator(example_data) |>
+        tabulator_options(
+          movableColumns = TRUE
+        ) |>
+        tabulator_columns(
+          list(
+            tabulator_column(
+              title = "let =",
+              field = "letters_eq"
+            ),
+            tabulator_column(
+              title = "let in",
+              field = "letters_in"
+            ),
+            tabulator_column(
+              title = "eq =",
+              field = "numbers_eq"
+            ),
+            tabulator_column(
+              title = "neq !=",
+              field = "numbers_ne"
+            ),
+            tabulator_column(
+              title = "gt >",
+              field = "numbers_gt"
+            ),
+            tabulator_column(
+              title = "gte >=",
+              field = "numbers_gte"
+            ),
+            tabulator_column(
+              title = "lt <",
+              field = "numbers_lt"
+            ),
+            tabulator_column(
+              title = "lte <=",
+              field = "numbers_lte"
+            ),
+            tabulator_column(
+              title = "regex",
+              field = "letters_regex"
+            ),
+            tabulator_column(
+              title = "ends",
+              field = "letters_ends"
+            ),
+            tabulator_column(
+              title = "starts",
+              field = "letters_starts"
+            )
+          )
+        ) |>
         subscribe_events(input$event)
     })
 
