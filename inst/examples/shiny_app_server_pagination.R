@@ -10,7 +10,10 @@ example_data <- data.frame(
   numbers_gte = c(1:10),
   numbers_lte = c(1:10),
   letters_eq = letters[1:10],
-  letters_in = c("abc", "def", "ghi", "jkl", "mnñ", "opq", "rst", "uvw", "xyz", "abc")
+  letters_in = c("abc", "def", "ghi", "jkl", "mnñ", "opq", "rst", "uvw", "xyz", "abc"),
+  letters_regex = c("abc", "def", "ghi", "jkl", "mnñ", "opq", "rst", "uvw", "xyz", "abc"),
+  letters_ends = c("abc", "def", "ghi", "jkl", "mnñ", "opq", "rst", "uvw", "xyz", "abc"),
+  letters_starts = c("abc", "def", "ghi", "jkl", "mnñ", "opq", "rst", "uvw", "xyz", "abc")
 )
 
 ui <- fluidPage(
@@ -70,6 +73,24 @@ server <- function(input, output, session) {
               field = "numbers_lte",
               headerFilter = TRUE,
               headerFilterFunc = "<="
+            ),
+            tabulator_column(
+              title = "regex",
+              field = "letters_regex",
+              headerFilter = TRUE,
+              headerFilterFunc = "regex"
+            ),
+            tabulator_column(
+              title = "ends",
+              field = "letters_ends",
+              headerFilter = TRUE,
+              headerFilterFunc = "ends"
+            ),
+            tabulator_column(
+              title = "starts",
+              field = "letters_starts",
+              headerFilter = TRUE,
+              headerFilterFunc = "starts"
             )
           )
         ) |>

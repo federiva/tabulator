@@ -6,7 +6,7 @@ test_that(
       func = function() {
         library(shiny)
         devtools::load_all()
-        path_file <- system.file("examples/shiny_app_remote_database_pagination.R", package = "tabulator")
+        path_file <- system.file("examples/shiny_app_remote_database_pagination_postgres.R", package = "tabulator")
         shiny::runApp(
           path_file,
           port = 9999
@@ -24,10 +24,10 @@ test_that(
         break
       }
     }
-
     on.exit({
       shiny_proc$kill()
     })
+
     # Wait until 2 secs to wait for the page to be rendered
     Sys.sleep(2)
     selenider::open_url("http://127.0.0.1:9999")
@@ -45,7 +45,6 @@ test_that(
       "let =", "let in", "eq =", "neq !=", "gt >", "gte >=", "lt <", "lte <=",
       "regex", "ends", "starts"
     )
-
     expect_true(
       all(expected_column_names == column_names)
     )
@@ -78,7 +77,7 @@ test_that(
     )
 
     # Selecting the IN filter and entering abc will result in two rows
-    filter <- filters[[2]]
+    filter <-filters[[2]]
 
     filter |>
       selenider::elem_focus()
@@ -277,7 +276,7 @@ test_that(
     )
 
     # Selecting the regex filter and entering $def will
-    # result in all rows since regex filtering is not supported in SQLite
+    # result in zero rows since that pattern do not exists
     filter <- filters[[9]]
 
     filter |>
@@ -287,7 +286,7 @@ test_that(
       selenider::elem_send_keys("$def")
     Sys.sleep(1)
     expect_true(
-      ss(".tabulator-row") |> has_length(5)
+      ss(".tabulator-row") |> has_length(0)
     )
 
     # Removing the two entered letters will display the entire table
@@ -297,7 +296,7 @@ test_that(
       ss(".tabulator-row") |> has_length(5)
     )
 
-    # result in all rows since regex filtering is not supported in SQLite
+
     filter |>
       selenider::elem_focus()
     Sys.sleep(1)
@@ -305,16 +304,16 @@ test_that(
       selenider::elem_send_keys("^abc")
     Sys.sleep(1)
     expect_true(
-      ss(".tabulator-row") |> has_length(5)
+      ss(".tabulator-row") |> has_length(2)
     )
 
-
+    # The table is only showing values matching the regex, therefore only abc and abc
     all_values_in_column <- ss(xpath = ".//div[@class='tabulator-table']//div[@tabulator-field='letters_regex']") |>
       lapply(elem_text) |>
       unlist()
 
     expect_true(
-      all(c("abc", "def", "ghi", "jkl", "mnñ") == all_values_in_column)
+      all(c("abc", "abc") == all_values_in_column)
     )
 
     # Removing the two entered letters will display the entire table
@@ -395,6 +394,7 @@ test_that(
     expect_true(
       all(c("abc", "abc") == all_values_in_column)
     )
+
 
     # Removing the two entered letters will display the entire table
     selenider::elem_clear_value(filter)

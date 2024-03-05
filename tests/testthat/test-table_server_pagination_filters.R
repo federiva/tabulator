@@ -36,7 +36,11 @@ test_that(
       }) |> unlist()
 
     # All of the columns were properly rendered in the expected order
-    expected_column_names <- c("let =", "let in", "eq =", "neq !=", "gt >", "gte >=", "lt <", "lte <=")
+    expected_column_names <- c(
+      "let =", "let in", "eq =", "neq !=", "gt >", "gte >=", "lt <", "lte <=",
+      "regex", "ends", "starts"
+    )
+    
     expect_true(
       all(expected_column_names == column_names)
     )
@@ -259,6 +263,152 @@ test_that(
 
     expect_true(
       all(c("1", "2", "3") == all_values_in_column)
+    )
+
+    # Removing the two entered letters will display the entire table
+    selenider::elem_clear_value(filter)
+    Sys.sleep(1)
+    expect_true(
+      ss(".tabulator-row") |> has_length(5)
+    )
+
+    # Selecting the regex filter and entering $def will
+    # result in zero rows since that pattern do not exists
+    filter <- filters[[9]]
+
+    filter |>
+      selenider::elem_focus()
+    Sys.sleep(1)
+    filter |>
+      selenider::elem_send_keys("$def")
+    Sys.sleep(1)
+    expect_true(
+      ss(".tabulator-row") |> has_length(0)
+    )
+
+    # Removing the two entered letters will display the entire table
+    selenider::elem_clear_value(filter)
+    Sys.sleep(1)
+    expect_true(
+      ss(".tabulator-row") |> has_length(5)
+    )
+
+
+    filter |>
+      selenider::elem_focus()
+    Sys.sleep(1)
+    filter |>
+      selenider::elem_send_keys("^abc")
+    Sys.sleep(1)
+    expect_true(
+      ss(".tabulator-row") |> has_length(2)
+    )
+
+    # The table is only showing values less or equal than 3, therefore only 1, 2 and 3
+    all_values_in_column <- ss(xpath = ".//div[@class='tabulator-table']//div[@tabulator-field='letters_regex']") |>
+      lapply(elem_text) |>
+      unlist()
+
+    expect_true(
+      all(c("abc", "abc") == all_values_in_column)
+    )
+
+    # Removing the two entered letters will display the entire table
+    selenider::elem_clear_value(filter)
+    Sys.sleep(1)
+    expect_true(
+      ss(".tabulator-row") |> has_length(5)
+    )
+
+        # Selecting the ends with filter and entering bc will
+    # result in two rows
+    filter <- filters[[10]]
+
+    filter |>
+      selenider::elem_focus()
+    Sys.sleep(1)
+    filter |>
+      selenider::elem_send_keys("bc")
+    Sys.sleep(1)
+    expect_true(
+      ss(".tabulator-row") |> has_length(2)
+    )
+
+    # The table is only showing values matching, therefore only abc and abc
+    all_values_in_column <- ss(xpath = ".//div[@class='tabulator-table']//div[@tabulator-field='letters_ends']") |>
+      lapply(elem_text) |>
+      unlist()
+
+    expect_true(
+      all(c("abc", "abc") == all_values_in_column)
+    )
+
+
+    # Removing the two entered letters will display the entire table
+    selenider::elem_clear_value(filter)
+    Sys.sleep(1)
+    expect_true(
+      ss(".tabulator-row") |> has_length(5)
+    )
+
+    # A non existing pattern returns no rows
+    filter |>
+      selenider::elem_focus()
+    Sys.sleep(1)
+    filter |>
+      selenider::elem_send_keys("cba")
+    Sys.sleep(1)
+    expect_true(
+      ss(".tabulator-row") |> has_length(0)
+    )
+
+    # Removing the two entered letters will display the entire table
+    selenider::elem_clear_value(filter)
+    Sys.sleep(1)
+    expect_true(
+      ss(".tabulator-row") |> has_length(5)
+    )
+
+    # Selecting the starts with filter and entering ab will
+    # result in two rows
+    filter <- filters[[11]]
+
+    filter |>
+      selenider::elem_focus()
+    Sys.sleep(1)
+    filter |>
+      selenider::elem_send_keys("ab")
+    Sys.sleep(1)
+    expect_true(
+      ss(".tabulator-row") |> has_length(2)
+    )
+
+    # The table is only showing values matching, therefore only abc and abc
+    all_values_in_column <- ss(xpath = ".//div[@class='tabulator-table']//div[@tabulator-field='letters_ends']") |>
+      lapply(elem_text) |>
+      unlist()
+
+    expect_true(
+      all(c("abc", "abc") == all_values_in_column)
+    )
+
+
+    # Removing the two entered letters will display the entire table
+    selenider::elem_clear_value(filter)
+    Sys.sleep(1)
+    expect_true(
+      ss(".tabulator-row") |> has_length(5)
+    )
+
+    # A non existing pattern returns no rows
+    filter |>
+      selenider::elem_focus()
+    Sys.sleep(1)
+    filter |>
+      selenider::elem_send_keys("bc")
+    Sys.sleep(1)
+    expect_true(
+      ss(".tabulator-row") |> has_length(0)
     )
 
     # Removing the two entered letters will display the entire table

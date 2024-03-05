@@ -2,7 +2,8 @@ devtools::load_all()
 library(shiny)
 library(dplyr)
 library(tabulator)
-library(RSQLite)
+library(RPostgres)
+library(DBI)
 library(dplyr)
 library(dbplyr)
 
@@ -19,10 +20,12 @@ example_data <- data.frame(
   letters_ends = c("abc", "def", "ghi", "jkl", "mnñ", "opq", "rst", "uvw", "xyz", "abc"),
   letters_starts = c("abc", "def", "ghi", "jkl", "mnñ", "opq", "rst", "uvw", "xyz", "abc")
 )
-
-temp_sqlite_path <- file.path(tempdir(), "example_data")
-# Create DB
-
+# Database connection details
+dbname <- Sys.getenv("POSTGRES_DB", "tabulator_test")
+host <- Sys.getenv("POSTGRES_HOST", "localhost")
+port <- Sys.getenv("POSTGRES_PORT", "5432")
+user <- Sys.getenv("POSTGRES_USER")
+password <- Sys.getenv("POSTGRES_PASSWORD")
 
 ui <- fluidPage(
   tabulatorOutput("table")
@@ -31,7 +34,14 @@ ui <- fluidPage(
 server <- function(input, output, session) {
   # When the data is obtained from a remote source then the data argument
   # of the tabulator function could be empty/NULL
-  con <- dbConnect(SQLite(), dbname = temp_sqlite_path)
+  con <- dbConnect(
+    RPostgres::Postgres(),
+    dbname = dbname,
+    host = host,
+    port = port,
+    user = user,
+    password = password
+  )
   dbWriteTable(con, "example_data", example_data, overwrite = TRUE)
   db_data <- tbl(con, "example_data")
 
@@ -99,7 +109,7 @@ server <- function(input, output, session) {
             field = "letters_ends",
             headerFilter = TRUE,
             headerFilterFunc = "ends"
-          ),
+          ),          
           tabulator_column(
             title = "starts",
             field = "letters_starts",
@@ -119,7 +129,6 @@ server <- function(input, output, session) {
   # Remove the temporary database once we finish
   shiny::onStop(function() {
     DBI::dbDisconnect(con)
-    unlink(temp_sqlite_path, force = TRUE)
   })
 
 }
