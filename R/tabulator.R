@@ -24,8 +24,7 @@ tabulator <- function(
     height = height,
     package = 'tabulator',
     elementId = elementId
-  ) |>
-    add_default_table_options()
+  )
 }
 
 #' Shiny bindings for tabulator
