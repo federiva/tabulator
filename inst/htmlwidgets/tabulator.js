@@ -12,7 +12,7 @@ HTMLWidgets.widget({
 
       renderValue: function(x) {
 
-        // TODO: code to render the widget, e.g.
+        // TODO: look for an old table and destroy it before re rendering
         window.la = el;
         window.da = x;
         const table = new Tabulator(`#${el.id}`, {
@@ -27,7 +27,7 @@ HTMLWidgets.widget({
           ...parseSortMode(x),
         });
         window.pala = table;
-
+        subscribeTableEvents(x, el.id, table);
       },
 
       resize: function(width, height) {
@@ -76,4 +76,41 @@ const parseSortMode = x => {
 
 const parseTableOptions = x => {
   return x.table_options
+}
+
+const subscribeTableEvents = (x, tableId, tabulatorTable) => {
+  if (!!x.events) {
+    x.events.map(eventName => {
+      console.log("registering " + eventName)
+      tabulatorTable.on(eventName, getColumnEventCallback(tableId, eventName))
+    })
+  }
+}
+
+
+const eventColumnEvents = [
+  "headerClick", "headerDblClick", "headerContext", "headerTap", "headerDblTap",
+  "headerTapHold", "headerMouseEnter", "headerMouseLeave", "headerMouseOver",
+  "headerMouseOut", "headerMouseMove", "headerMouseDown", "headerMouseUp",
+]
+
+const getColumnEventCallback  = (tableId, eventName) => {
+  if (eventColumnEvents.includes(eventName)) {
+    return eventColumnCallback(tableId, eventName)
+  }
+}
+
+const eventColumnCallback = (tableId, eventName) => {
+  return function(e, column) {
+    const inputId = `${tableId}_${eventName}`;
+    Shiny.setInputValue(
+      inputId,
+      {
+        event: eventName,
+        field: column.getField(),
+        col_values: column.getCells().map(x => x.getValue())
+      },
+      { priority: "event" }
+    );
+  }
 }
