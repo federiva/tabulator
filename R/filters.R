@@ -62,8 +62,13 @@ run_filter_func <- function(data_in, type, field, value) {
       data_in |>
         filter(str_ends(string = !!sym(field), pattern = pattern))
     } else if (type == "regex") {
-      data_in |>
-        filter(grepl(x = !!sym(field), pattern = pattern))
+      if (is_sqlite_backend(data_in)) {
+        cli_alert_warning("The `regex` filter is not supported in SQLite. Returning the unfiltered dataset.")
+        data_in
+      } else {
+        data_in |>
+          filter(grepl(x = !!sym(field), pattern = pattern))
+      }
     } else if (type == "starts") {
       data_in |>
         filter(str_starts(string = !!sym(field), pattern = pattern))
@@ -137,4 +142,10 @@ filter_data <- function(data_in, query_string) {
     }
   }
   data_in
+}
+
+
+#' @importFrom rlang inherits_any
+is_sqlite_backend <- function(data_in) {
+  inherits_any(data_in, "tbl_SQLiteConnection")
 }
