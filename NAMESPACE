@@ -3,6 +3,7 @@
 export(column_layout_mode)
 export(get_available_column_layout_modes)
 export(get_available_pagination_modes)
+export(get_valid_event_names)
 export(get_valid_table_options)
 export(hide_column_by_field)
 export(pagination)

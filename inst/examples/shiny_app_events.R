@@ -1,3 +1,4 @@
+devtools::load_all()
 library(shiny)
 library(tabulator)
 
@@ -16,12 +17,7 @@ example_data <- data.frame(
   letters_starts = c("abc", "def", "ghi", "jkl", "mnñ", "opq", "rst", "uvw", "xyz", "abc")
 )
 
-events_list <- c(
-  "headerClick", "headerDblClick", "headerContext", "headerTap", "headerDblTap",
-  "headerTapHold", "headerMouseEnter", "headerMouseLeave", "headerMouseOver",
-  "headerMouseOut", "headerMouseMove", "headerMouseDown", "headerMouseUp",
-  "columnMoved", "columnResized", "columnTitleChanged", "columnVisibilityChanged"
-)
+events_list <- unlist(get_valid_event_names(), use.names = FALSE)
 
 ui <- fluidPage(
   tabulatorOutput("table"),
