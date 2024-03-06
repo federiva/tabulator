@@ -4,7 +4,13 @@
 \alias{tabulator}
 \title{Tabulator table}
 \usage{
-tabulator(data = NULL, width = NULL, height = NULL, elementId = NULL)
+tabulator(
+  data = NULL,
+  width = NULL,
+  height = NULL,
+  elementId = NULL,
+  theme = "bootstrap5"
+)
 }
 \description{
 Renders a tabulator table

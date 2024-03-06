@@ -56,6 +56,15 @@ test_for_valid_table_options <- function(table_options) {
   }
 }
 
+use_default_table_options <- function(tabulator) {
+  for (default_option in names(default_table_options)) {
+    if (!default_option %in% names(tabulator$x$table_options)) {
+      tabulator$x$table_options[[default_option]] <- default_table_options[[default_option]]$value
+    }
+  }
+  tabulator
+}
+
 #' Gets the valid table options to be passed to a tabulator object
 #' @importFrom cli cli_inform
 #' @export

@@ -14,7 +14,7 @@ HTMLWidgets.widget({
       },
 
       renderValue: function(x) {
-
+        // removeCSSDependencies()
         // TODO: look for an old table and destroy it before re rendering
         window.la = el;
         window.da = x;
@@ -78,3 +78,9 @@ const parseSortMode = x => {
 const parseTableOptions = x => {
   return x.table_options
 }
+
+removeCSSDependencies = (params) => {
+  $("head link[href*='tabulator-htmlwidgets-css']").remove();
+}
+
+Shiny.addCustomMessageHandler("remove_css_dependencies", removeCSSDependencies);

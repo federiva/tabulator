@@ -9,12 +9,14 @@ tabulator <- function(
   data = NULL,
   width = NULL,
   height = NULL,
-  elementId = NULL
+  elementId = NULL,
+  theme = "bootstrap5"
 ) {
   # forward options using x
   params = list(
     data = data
   )
+  theme <- check_is_valid_theme(theme)
   attr(params, 'TOJSON_ARGS') <- list(dataframe = "rows")
   # create widget
   htmlwidgets::createWidget(
@@ -23,8 +25,17 @@ tabulator <- function(
     width = width,
     height = height,
     package = 'tabulator',
-    elementId = elementId
+    elementId = elementId,
+    dependencies = get_theme_dependency(theme),
+    preRenderHook = pre_render_hook
   )
+}
+
+pre_render_hook <- function(tabulator) {
+  remove_css_dependencies()
+  tabulator |>
+    use_default_table_options() |>
+    run_checks()
 }
 
 #' Shiny bindings for tabulator
@@ -52,7 +63,7 @@ tabulatorOutput <- function(outputId, width = '100%', height = '400px'){
 #' @export
 renderTabulator <- function(expr, env = parent.frame(), quoted = FALSE) {
   if (!quoted) {
-    expr <- substitute(tabulator:::run_checks(expr))
+    expr <- substitute(expr)
   }
   htmlwidgets::shinyRenderWidget(expr, tabulatorOutput, env, quoted = TRUE)
 }
