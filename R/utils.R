@@ -19,6 +19,9 @@ rlang::on_load(
 #' @importFrom stringr str_escape
 #' @noRd
 check_for_valid_column_names <- function(data, nested_field_separator) {
+  if (is.null(data)) {
+    return(invisible())
+  }
   columns <- colnames(data)
   test <- any(grepl(str_escape(nested_field_separator), columns))
   if (test) {
