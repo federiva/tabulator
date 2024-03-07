@@ -1,2 +1,2 @@
 #' @export
-people_data <- readRDS(system.file("datasets/people_data.rds", package = "tabulator"))
+people_data <- utils::read.csv(system.file("datasets/people_data.csv", package = "tabulator"))
