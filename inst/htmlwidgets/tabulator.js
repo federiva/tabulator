@@ -14,7 +14,6 @@ HTMLWidgets.widget({
       },
 
       renderValue: function(x) {
-        // removeCSSDependencies()
         // TODO: look for an old table and destroy it before re rendering
         window.la = el;
         window.da = x;
@@ -31,6 +30,13 @@ HTMLWidgets.widget({
         });
         window.pala = table;
         subscribeTableEvents(x, el.id, table);
+        subscribeDefaultEvents(table);
+
+        // After rendering, bind all of the shiny inputs associated to this instance,
+        // if any.
+        table.on("tableBuilt", function() {
+          Shiny.bindAll(document.getElementById(el.id));
+        });
       },
 
       resize: function(width, height) {
