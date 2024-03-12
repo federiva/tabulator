@@ -18,9 +18,9 @@ const hideColumnByField = (params) => {
  * @return {void} No return value
  */
 const showColumnByField = (params) => {
-  tableId = params.table_id;
-  field = params.field;
-  table = getTabulatorTable(tableId);
+  const tableId = params.table_id;
+  const field = params.field;
+  const table = getTabulatorTable(tableId);
   table.getColumn(field).show();
 }
 
@@ -28,16 +28,33 @@ const showColumnByField = (params) => {
  * Toggles the visibility of a column in a Tabulator table.
  *
  * @param {Object} params - An object containing the table_id and field for the column to be toggled.
- * @return {void} 
+ * @return {void}
  */
 const toggleColumnByField = (params) => {
-  tableId = params.table_id;
-  field = params.field;
-  table = getTabulatorTable(tableId);
+  const tableId = params.table_id;
+  const field = params.field;
+  const table = getTabulatorTable(tableId);
   table.getColumn(field).toggle();
+}
+
+const replaceColumnDefinitions = (params) => {
+  const tableId = params.table_id;
+  const columnDefinitions = params.columns;
+  table = getTabulatorTable(tableId);
+  table.setColumns(columnDefinitions);
+}
+
+const updateColumnDefinition = (params) => {
+  const tableId = params.table_id;
+  const field = params.field;
+  const columnDefinition = params.column_definition;
+  table = getTabulatorTable(tableId);
+  table.getColumn(field).updateDefinition(columnDefinition);
 }
 
 // Shiny bindings
 Shiny.addCustomMessageHandler("hide_column_by_field", hideColumnByField);
 Shiny.addCustomMessageHandler("show_column_by_field", showColumnByField);
 Shiny.addCustomMessageHandler("toggle_column_by_field", toggleColumnByField);
+Shiny.addCustomMessageHandler("replace_column_definitions", replaceColumnDefinitions);
+Shiny.addCustomMessageHandler("update_column_definition", updateColumnDefinition);
