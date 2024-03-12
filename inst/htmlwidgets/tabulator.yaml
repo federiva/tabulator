@@ -1,5 +1,8 @@
-# (uncomment to add a dependency)
 dependencies:
+ - name: "luxon"
+   version: "3"
+   src: "htmlwidgets/dist"
+   script: "luxon/luxon.min.js"
  - name: "tabulator-utils-api"
    version: "0.1"
    src: "htmlwidgets/utils"
