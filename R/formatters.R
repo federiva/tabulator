@@ -1,3 +1,5 @@
+# TODO
+# datetime and datetimediff are not currently working
 builtin_formatters <- c(
   "buttonCross", "buttonTick", "color", "datetime", "datetimediff", "handle",
   "html", "image", "link", "lookup", "money", "plaintext", "progress", "rownum",
