@@ -11,7 +11,31 @@ const subscribeTableEvents = (x, tableId, tabulatorTable) => {
       tabulatorTable.on(eventName, getEventCallback(tableId, eventName))
     })
   }
-}
+};
+
+const subscribeDefaultEvents = (tabulatorTable) => {
+  tabulatorTable.on("cellEditing", function(cell) {
+    const cellData = {
+      field: cell.getField(),
+      initial_value: cell.getInitialValue(),
+      old_value: cell.getOldValue(),
+      new_value: cell.getValue(),
+      row_position: cell.getRow().getPosition(),
+    }
+    Shiny.setInputValue(`${tabulatorTable.element.id}_editing`, cellData, { priority: "event" });
+  });
+
+  tabulatorTable.on("cellEdited", function(cell) {
+    const cellData = {
+      field: cell.getField(),
+      initial_value: cell.getInitialValue(),
+      old_value: cell.getOldValue(),
+      new_value: cell.getValue(),
+      row_position: cell.getRow().getPosition(),
+    }
+    Shiny.setInputValue(`${tabulatorTable.element.id}_edited`, cellData, { priority: "event" });
+  });
+};
 
 // Column events that can be subscribed
 const columnEventsTypes = {
