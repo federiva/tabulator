@@ -4,7 +4,12 @@
 \alias{run_example_app}
 \title{Run an example app}
 \usage{
-run_example_app(app_name, port = 9999)
+run_example_app(app_name = NULL, port = 9999)
+}
+\arguments{
+\item{app_name}{The name of the app to run}
+
+\item{port}{The port to run the app on}
 }
 \description{
 Run an example app
