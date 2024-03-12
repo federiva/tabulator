@@ -1,4 +1,3 @@
-devtools::load_all()
 library(shiny)
 library(tabulator)
 
@@ -20,6 +19,25 @@ example_data <- data.frame(
 events_list <- unlist(get_valid_event_names(), use.names = FALSE)
 
 ui <- fluidPage(
+  div(
+    class = "help-container",
+    h2("About this example"),
+    h3("Events"),
+    wellPanel(
+      p(
+        "This section provides sample cases that demonstrate the usage of events
+        in tabulator."
+      ),
+      p(
+        span("Further assistance can be accessed by exploring the "),
+        tags$a(
+          href = "https://tabulator.info/docs/5.6/events",
+          target = "_blank",
+          "Tabulator's documentation."
+        )
+      )
+    )
+  ),
   tabulatorOutput("table"),
   div(
     class = "columns-actions-container",
@@ -35,7 +53,8 @@ ui <- fluidPage(
       h4("Events Output"),
       textOutput("table_events")
     )
-  )
+  ),
+  highlighter_ui()
 )
 
 server <- function(input, output, session) {
@@ -121,6 +140,7 @@ server <- function(input, output, session) {
       jsonlite::toJSON(latest_event())
     })
 
+    highlighter_server(input, output, "table_events")
 }
 
 shinyApp(ui, server)

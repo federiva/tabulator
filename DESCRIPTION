@@ -19,6 +19,7 @@ Suggests:
     dbplyr,
     highlighter,
     pingr,
+    plumber,
     RSQLite,
     selenider,
     shiny,

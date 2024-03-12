@@ -26,7 +26,8 @@ ui <- fluidPage(
     class = "tabulator-container",
     h3("Tabulator table"),
     tabulatorOutput("table")
-  )
+  ),
+  highlighter_ui()
 )
 
 
@@ -41,6 +42,7 @@ server <- function(input, output, session) {
 
     output$example_data <- renderTable(input_data)
 
+    highlighter_server(input, output, "nested_field_separator")
 }
 
 shinyApp(ui, server)

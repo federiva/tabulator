@@ -18,6 +18,7 @@ close_api <- function() {
   background_api$kill()
 }
 
+
 ui <- fluidPage(
   tabulatorOutput("table")
 )
@@ -41,7 +42,6 @@ custom_handler <- function(data, req) {
   )
 }
 
-
 server <- function(input, output, session) {
 # When the data is obtained from a remote source then the data argument
 # of the tabulator function could be empty/NULL
@@ -61,4 +61,3 @@ server <- function(input, output, session) {
 }
 
 shinyApp(ui, server)
-`

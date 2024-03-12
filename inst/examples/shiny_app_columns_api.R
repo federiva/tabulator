@@ -44,7 +44,8 @@ ui <- fluidPage(
       inputId = "delete_column",
       label = "Delete Name Column"
     )
-  )
+  ),
+  highlighter_ui()
 )
 
 # Adding more data to our sample dataset
@@ -183,7 +184,11 @@ server <- function(input, output, session) {
     )
   })
 
-
+  highlighter_server(
+    input = input,
+    output = output,
+    app_name = "columns_api"
+  )
 }
 
 shinyApp(ui, server)

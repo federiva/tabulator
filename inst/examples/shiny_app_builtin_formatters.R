@@ -30,7 +30,8 @@ ui <- fluidPage(
   div(
     class = "table-container",
     tabulatorOutput(outputId = "table")
-  )
+  ),
+  highlighter_ui()
 )
 
 # Adding more data to our sample dataset
@@ -154,6 +155,7 @@ server <- function(input, output, session) {
     })
   })
 
+  highlighter_server(input, output, "builtin_formatters")
 
 }
 

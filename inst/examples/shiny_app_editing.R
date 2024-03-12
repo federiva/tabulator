@@ -29,7 +29,8 @@ ui <- fluidPage(
     class = "text-container",
     style = "padding: 2rem;",
     textOutput("edited_text")
-  )
+  ),
+  highlighter_ui()
 )
 
 # Adding more data to our sample dataset
@@ -122,6 +123,7 @@ server <- function(input, output, session) {
     )
   })
 
+  highlighter_server(input, output, "editing")
 }
 
 shinyApp(ui, server)

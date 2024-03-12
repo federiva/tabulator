@@ -24,7 +24,8 @@ ui <- fluidPage(
   div(
     class = "table-container",
     tabulatorOutput(outputId = "table")
-  )
+  ),
+  highlighter_ui()
 )
 
 # Adding random numbers
@@ -93,6 +94,7 @@ server <- function(input, output, session) {
         )
       )
   })
+  highlighter_server(input, output, app_name = "columns_calculations")
 }
 
 shinyApp(ui, server)
