@@ -35,6 +35,12 @@ const subscribeDefaultEvents = (tabulatorTable) => {
     }
     Shiny.setInputValue(`${tabulatorTable.element.id}_edited`, cellData, { priority: "event" });
   });
+
+  // After rendering, bind all of the shiny inputs associated to this instance,
+  // if any.
+  tabulatorTable.on("tableBuilt", function() {
+    Shiny.bindAll(document.getElementById(tabulatorTable.element.id));
+  });
 };
 
 // Column events that can be subscribed

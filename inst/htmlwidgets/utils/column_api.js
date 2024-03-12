@@ -52,9 +52,27 @@ const updateColumnDefinition = (params) => {
   table.getColumn(field).updateDefinition(columnDefinition);
 }
 
+const addColumn = params => {
+  const tableId = params.table_id;
+  const columnDefinition = params.column_definition;
+  const before = params.before;
+  const position = params.position;
+  table = getTabulatorTable(tableId);
+  table.addColumn(columnDefinition, before, position);
+}
+
+const deleteColumn = params => {
+  const tableId = params.table_id;
+  const field = params.field;
+  table = getTabulatorTable(tableId);
+  table.deleteColumn(field);
+}
+
 // Shiny bindings
 Shiny.addCustomMessageHandler("hide_column_by_field", hideColumnByField);
 Shiny.addCustomMessageHandler("show_column_by_field", showColumnByField);
 Shiny.addCustomMessageHandler("toggle_column_by_field", toggleColumnByField);
 Shiny.addCustomMessageHandler("replace_column_definitions", replaceColumnDefinitions);
 Shiny.addCustomMessageHandler("update_column_definition", updateColumnDefinition);
+Shiny.addCustomMessageHandler("add_column", addColumn);
+Shiny.addCustomMessageHandler("delete_column", deleteColumn);

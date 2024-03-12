@@ -8,13 +8,13 @@ ui <- fluidPage(
     h3("Columns API"),
     wellPanel(
       p(
-        "This section provides sample cases that demonstrate the usage of column
-        definitions and the usage of custom callbacks in formatter functions."
+        "This section provides sample cases that demonstrate the usage of functions
+        to interact with the Columns in the table."
       ),
       p(
         span("Further assistance can be accessed by exploring the "),
         tags$a(
-          href = "https://tabulator.info/docs/5.6/columns",
+          href = "https://tabulator.info/docs/5.6/columns#manipulation",
           target = "_blank",
           "Tabulator's documentation."
         )
@@ -35,6 +35,14 @@ ui <- fluidPage(
     actionButton(
       inputId = "update",
       label = "Update Column Definition"
+    ),
+    actionButton(
+      inputId = "add_column",
+      label = "Add a new column"
+    ),
+    actionButton(
+      inputId = "delete_column",
+      label = "Delete Name Column"
     )
   )
 )
@@ -147,13 +155,32 @@ server <- function(input, output, session) {
     update_column_definition(
       table_id = "table",
       field = "money",
-      column_definition =
-        tabulator_column(
-          field = "money",
-          title = "money",
-          visible = TRUE
-        )
+      column_definition = tabulator_column(
+        field = "money",
+        title = "money",
+        visible = TRUE
       )
+    )
+  })
+
+  observeEvent(input$add_column, {
+    add_column(
+      table_id = "table",
+      column_definition = tabulator_column(
+        field = "Favourite_Color",
+        title = "C",
+        formatter = "color",
+        maxWidth = 50
+      ),
+      position = "Name"
+    )
+  })
+
+  observeEvent(input$delete_column, {
+    delete_column(
+      table_id = "table",
+      field = "Name"
+    )
   })
 
 

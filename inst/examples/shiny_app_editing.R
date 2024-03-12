@@ -58,6 +58,7 @@ server <- function(input, output, session) {
             )
           ),
           tabulator_column(
+            title = "Date of Birth",
             field = "Date_Of_Birth",
             editor = "date"
           ),

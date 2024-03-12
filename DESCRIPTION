@@ -17,6 +17,7 @@ Imports:
     rlang
 Suggests: 
     dbplyr,
+    highlighter,
     pingr,
     RSQLite,
     selenider,
