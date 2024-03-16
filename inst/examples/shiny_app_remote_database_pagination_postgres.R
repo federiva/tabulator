@@ -1,4 +1,3 @@
-devtools::load_all()
 library(shiny)
 library(dplyr)
 library(tabulator)
@@ -35,7 +34,8 @@ user <- Sys.getenv("POSTGRES_USER")
 password <- Sys.getenv("POSTGRES_PASSWORD")
 
 ui <- fluidPage(
-  tabulatorOutput("table")
+  tabulatorOutput("table"),
+  highlighter_ui()
 )
 
 server <- function(input, output, session) {
@@ -138,5 +138,6 @@ server <- function(input, output, session) {
     DBI::dbDisconnect(con)
   })
 
+  highlighter_server(input, output, "remote_db_pagination_postgres")
 }
 shinyApp(ui, server)

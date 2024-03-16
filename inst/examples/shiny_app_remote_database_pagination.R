@@ -1,4 +1,3 @@
-devtools::load_all()
 library(shiny)
 library(dplyr)
 library(tabulator)
@@ -25,7 +24,8 @@ temp_sqlite_path <- file.path(tempdir(), "example_data")
 
 
 ui <- fluidPage(
-  tabulatorOutput("table")
+  tabulatorOutput("table"),
+  highlighter_ui()
 )
 
 server <- function(input, output, session) {
@@ -122,5 +122,7 @@ server <- function(input, output, session) {
     unlink(temp_sqlite_path, force = TRUE)
   })
 
+  highlighter_server(input, output, "remote_db_pagination")
 }
+
 shinyApp(ui, server)

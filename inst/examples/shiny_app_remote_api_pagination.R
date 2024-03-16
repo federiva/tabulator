@@ -1,4 +1,3 @@
-devtools::load_all()
 library(shiny)
 library(tabulator)
 library(callr)
@@ -20,7 +19,8 @@ close_api <- function() {
 
 
 ui <- fluidPage(
-  tabulatorOutput("table")
+  tabulatorOutput("table"),
+  highlighter_ui()
 )
 
 # Set the URL
@@ -58,6 +58,7 @@ server <- function(input, output, session) {
 
     shiny::onSessionEnded(close_api)
 
+    highlighter_server(input, output, "remote_api_pagination")
 }
 
 shinyApp(ui, server)

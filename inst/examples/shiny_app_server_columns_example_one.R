@@ -1,9 +1,9 @@
-devtools::load_all()
 library(shiny)
 library(tabulator)
 
 ui <- fluidPage(
-  tabulatorOutput("table")
+  tabulatorOutput("table"),
+  highlighter_ui()
 )
 
 
@@ -42,6 +42,8 @@ server <- function(input, output, session) {
           )
         )
     })
+
+    highlighter_server(input, output, "columns_server_pagination_one")
 
 }
 
