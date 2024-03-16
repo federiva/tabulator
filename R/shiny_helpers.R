@@ -24,11 +24,14 @@ highlighter_ui <- function() {
 }
 
 
-#' @importFrom highlighter highlight_file renderHighlighter
+#' @importFrom highlighter highlight_file renderHighlighter line_number
 highlighter_server <- function(input, output, app_name) {
   output$code <- renderHighlighter({
     highlight_file(
       get_valid_app_names()[[app_name]],
+      plugins = list(
+        line_number()
+      )
     )
   })
 }
