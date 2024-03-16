@@ -1,10 +1,14 @@
 get_valid_app_names <- function() {
   list(
     builtin_formatters = system.file("examples", "shiny_app_builtin_formatters.R", package = "tabulator"),
+    clipboard = system.file("examples", "shiny_app_clipboard.R", package = "tabulator"),
     column_definitions = system.file("examples", "shiny_app_columns.R", package = "tabulator"),
     columns_api = system.file("examples", "shiny_app_columns_api.R", package = "tabulator"),
     columns_calculations = system.file("examples", "shiny_app_columns_calculations.R", package = "tabulator"),
+    columns_server_pagination_one = system.file("examples", "shiny_app_server_columns_example_one.R", package = "tabulator"),
+    columns_server_pagination_two = system.file("examples", "shiny_app_server_columns_example_two.R", package = "tabulator"),
     editing = system.file("examples", "shiny_app_editing.R", package = "tabulator"),
+    history = system.file("examples", "shiny_app_history.R", package = "tabulator"),
     nested_field_separator = system.file("examples", "shiny_app_options_nested_field_separator.R", package = "tabulator"),
     remote_api_pagination = system.file("examples", "shiny_app_remote_api_pagination.R", package = "tabulator"),
     remote_db_pagination = system.file("examples", "shiny_app_remote_database_pagination.R", package = "tabulator"),
