@@ -71,3 +71,11 @@ get_total_pages <- function(.data, page_size = 10) {
     pull(n)
   ceiling(numerator / page_size)
 }
+
+
+get_namespaced_id <- function(id, session = shiny::getDefaultReactiveDomain()) {
+  if (!is.null(session)) {
+    id <- session$ns(id)
+  }
+  id
+}
