@@ -10,8 +10,16 @@ default_table_options <- list(
   ),
   resizableColumnFit = list(
     value = TRUE
+  ),
+  history = list(
+    value = FALSE
+  ),
+  clipboard = list(
+    value = TRUE
   )
 )
+
+other_valid_options <- c("clipboardCopyConfig", "clipboard", "clipboardPasteParser")
 
 #' Add table level options to a tabulator object
 #' @param tabulator_object An object of class tabulator
@@ -30,10 +38,11 @@ tabulator_options <- function(tabulator_object, ...) {
 #' @importFrom cli cli_warn
 test_for_valid_table_options <- function(table_options) {
   assert_is_named(table_options)
-  valid_table_options_names <- names(default_table_options)
+  valid_table_options_names <- c(names(default_table_options), other_valid_options)
+  valid_table_options_names_default <- c(names(default_table_options))
   invalid_options <- Filter(function(x) !x %in% valid_table_options_names, names(table_options))
   valid_options <- Filter(function(x) x %in% valid_table_options_names, names(table_options))
-  all_options <- unique(c(valid_options, valid_table_options_names))
+  all_options <- unique(valid_table_options_names_default)
 
   if (length(invalid_options) > 0) {
     cli_warn(
