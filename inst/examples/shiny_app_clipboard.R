@@ -33,18 +33,6 @@ ui <- fluidPage(
     actionButton(
       inputId = "copy",
       label = "Copy table to clipboard"
-    ),
-    actionButton(
-      inputId = "update",
-      label = "Update Column Definition"
-    ),
-    actionButton(
-      inputId = "add_column",
-      label = "Add a new column"
-    ),
-    actionButton(
-      inputId = "delete_column",
-      label = "Delete Name Column"
     )
   ),
   highlighter_ui()
@@ -148,38 +136,6 @@ server <- function(input, output, session) {
 
   observeEvent(input$copy, {
     copy_table("table")
-  })
-
-  observeEvent(input$update, {
-    update_column_definition(
-      table_id = "table",
-      field = "money",
-      column_definition = tabulator_column(
-        field = "money",
-        title = "money",
-        visible = TRUE
-      )
-    )
-  })
-
-  observeEvent(input$add_column, {
-    add_column(
-      table_id = "table",
-      column_definition = tabulator_column(
-        field = "Favourite_Color",
-        title = "C",
-        formatter = "color",
-        maxWidth = 50
-      ),
-      position = "Name"
-    )
-  })
-
-  observeEvent(input$delete_column, {
-    delete_column(
-      table_id = "table",
-      field = "Name"
-    )
   })
 
   highlighter_server(
