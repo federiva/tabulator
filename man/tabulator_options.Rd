@@ -15,5 +15,5 @@ tabulator_options(tabulator_object, ...)
 Add table level options to a tabulator object
 }
 \seealso{
-\href{https://tabulator.info/docs/5.6/layout}{tabulator documentation}
+\href{https://tabulator.info/docs/6.0/layout}{tabulator documentation}
 }

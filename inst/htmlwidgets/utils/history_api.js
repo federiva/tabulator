@@ -1,7 +1,7 @@
 //**
 // * History API
 // * Functions implementing interactions with the history of a tabulator table.
-// * See https://tabulator.info/docs/5.6/history
+// * See https://tabulator.info/docs/6.0/history
 // */
 
 

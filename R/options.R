@@ -24,7 +24,7 @@ other_valid_options <- c("clipboardCopyConfig", "clipboard", "clipboardPastePars
 #' Add table level options to a tabulator object
 #' @param tabulator_object An object of class tabulator
 #' @param ... A list of options to be added as named parameters
-#' @seealso [tabulator documentation](https://tabulator.info/docs/5.6/layout)
+#' @seealso [tabulator documentation](https://tabulator.info/docs/6.0/layout)
 #' @importFrom rlang list2
 tabulator_options <- function(tabulator_object, ...) {
   table_options <- list2(...) |>

@@ -7,7 +7,7 @@ builtin_formatters <- c(
 )
 
 builtin_formatters_params <- list(
-  # https://tabulator.info/docs/5.6/format#formatter-money
+  # https://tabulator.info/docs/6.0/format#formatter-money
   money = list(
     decimal = ".",
     negativeSign = TRUE,
@@ -16,14 +16,14 @@ builtin_formatters_params <- list(
     symbolAfter = "p",
     thousand = ","
   ),
-  # https://tabulator.info/docs/5.6/format#formatter-image
+  # https://tabulator.info/docs/6.0/format#formatter-image
   image = list(
     height = "50px", # character
     width = "50px", # character
     urlPrefix = "http://website.com/images/", # character
     urlSuffix = ".png" # character
   ),
-  # https://tabulator.info/docs/5.6/format#formatter-link
+  # https://tabulator.info/docs/6.0/format#formatter-link
   link = list(
     labelField = "name",
     target = "_blank",
@@ -35,31 +35,31 @@ builtin_formatters_params <- list(
     outputFormat = "dd/MM/yy",
     timezone = "America/Los_Angeles"
   ),
-  # https://tabulator.info/docs/5.6/format#formatter-datetimediff
+  # https://tabulator.info/docs/6.0/format#formatter-datetimediff
   datetimediff = list(
     humanize = TRUE,
     inputFormat = "yyyy-MM-dd",
     invalidPlaceholder = "(invalid date)",
     unit = list("months", "days", "hours")
   ),
-  # https://tabulator.info/docs/5.6/format#formatter-tickcross
+  # https://tabulator.info/docs/6.0/format#formatter-tickcross
   tickCross = list(
     allowEmpty = TRUE,
     allowTruthy = TRUE,
     crossElement = "<i class='fa fa-times'></i>",
     tickElement = "<i class='fa fa-check'></i>"
   ),
-  # https://tabulator.info/docs/5.6/format#formatter-star
+  # https://tabulator.info/docs/6.0/format#formatter-star
   star = list(
     starts = 8
   ),
-  # https://tabulator.info/docs/5.6/format#formatter-traffic
+  # https://tabulator.info/docs/6.0/format#formatter-traffic
   traffic = list(
     color = list("green", "orange", "red"),
     max = 10,
     min = 0
   ),
-  # https://tabulator.info/docs/5.6/format#formatter-progress
+  # https://tabulator.info/docs/6.0/format#formatter-progress
   progress = list(
     color = list("green", "orange", "red"),
     legend = TRUE,
@@ -68,7 +68,7 @@ builtin_formatters_params <- list(
     max = 10,
     min = 0
   ),
-  # https://tabulator.info/docs/5.6/format#formatter-lookup
+  # https://tabulator.info/docs/6.0/format#formatter-lookup
   lookup = list(
     big = "Scary",
     medium = "Fine",
@@ -95,7 +95,7 @@ show_example_builtin_params <- function(builtin_formatter) {
         "",
         "These should be entered as a named list to the `tabulator_column` function",
         "i" = "Run {.run tabulator::get_example_builtin_param(\"{builtin_formatter}\")} to get an example list of parameters",
-        "{symbol$fancy_question_mark} For additional help you can check the documentation in {.url https://tabulator.info/docs/5.6/format#format-builtin}"
+        "{symbol$fancy_question_mark} For additional help you can check the documentation in {.url https://tabulator.info/docs/6.0/format#format-builtin}"
       )
     )
   }
@@ -109,7 +109,7 @@ get_example_builtin_param <- function(builtin_formatter) {
 #' @importFrom cli cli_h1 cli_inform symbol
 #' @export
 get_builtin_formatters <- function() {
-  link <- "https://tabulator.info/docs/5.6/format"
+  link <- "https://tabulator.info/docs/6.0/format"
   cli::cli_h1("Tabulator - Builtin Formatters")
   cli_inform(
     c(
