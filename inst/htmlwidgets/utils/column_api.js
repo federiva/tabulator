@@ -69,10 +69,12 @@ const deleteColumn = params => {
 }
 
 // Shiny bindings
-Shiny.addCustomMessageHandler("hide_column_by_field", hideColumnByField);
-Shiny.addCustomMessageHandler("show_column_by_field", showColumnByField);
-Shiny.addCustomMessageHandler("toggle_column_by_field", toggleColumnByField);
-Shiny.addCustomMessageHandler("replace_column_definitions", replaceColumnDefinitions);
-Shiny.addCustomMessageHandler("update_column_definition", updateColumnDefinition);
-Shiny.addCustomMessageHandler("add_column", addColumn);
-Shiny.addCustomMessageHandler("delete_column", deleteColumn);
+if (!!window.Shiny) {
+  Shiny.addCustomMessageHandler("hide_column_by_field", hideColumnByField);
+  Shiny.addCustomMessageHandler("show_column_by_field", showColumnByField);
+  Shiny.addCustomMessageHandler("toggle_column_by_field", toggleColumnByField);
+  Shiny.addCustomMessageHandler("replace_column_definitions", replaceColumnDefinitions);
+  Shiny.addCustomMessageHandler("update_column_definition", updateColumnDefinition);
+  Shiny.addCustomMessageHandler("add_column", addColumn);
+  Shiny.addCustomMessageHandler("delete_column", deleteColumn);
+}

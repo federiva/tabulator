@@ -5,4 +5,6 @@ const copyTable = params => {
   table.copyToClipboard(what);
 }
 
-Shiny.addCustomMessageHandler("copy_table", copyTable);
+if (!!window.Shiny) {
+  Shiny.addCustomMessageHandler("copy_table", copyTable);
+}

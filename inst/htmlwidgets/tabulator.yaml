@@ -1,4 +1,9 @@
 dependencies:
+ - name: "tabulator"
+   version: "6.0"
+   src: "htmlwidgets/dist"
+   script: "js/tabulator.min.js"
+   stylesheet: "css/tabulator_bootstrap5.min.css"
  - name: "luxon"
    version: "3"
    src: "htmlwidgets/dist"
@@ -23,8 +28,3 @@ dependencies:
    version: "0.1"
    src: "htmlwidgets/utils"
    script: "events.js"
- - name: "tabulator"
-   version: "6.0"
-   src: "htmlwidgets/dist"
-   script: "js/tabulator.min.js"
-   stylesheet: "css/tabulator_bootstrap5.min.css"

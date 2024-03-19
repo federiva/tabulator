@@ -23,6 +23,8 @@ const clearHistory = params => {
   table.clearHistory();
 };
 
-Shiny.addCustomMessageHandler("undo_action", undoAction);
-Shiny.addCustomMessageHandler("redo_action", redoAction);
-Shiny.addCustomMessageHandler("clear_history", clearHistory)
+if (!!window.Shiny) {
+  Shiny.addCustomMessageHandler("undo_action", undoAction);
+  Shiny.addCustomMessageHandler("redo_action", redoAction);
+  Shiny.addCustomMessageHandler("clear_history", clearHistory)
+}

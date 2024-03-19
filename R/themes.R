@@ -37,19 +37,28 @@ check_is_valid_theme <- function(theme_name) {
 #' @importFrom shiny getDefaultReactiveDomain
 remove_css_dependencies <- function() {
   session <- getDefaultReactiveDomain()
-  session$sendCustomMessage("remove_css_dependencies", "")
+  if (!is.null(session)) {
+    session$sendCustomMessage("remove_css_dependencies", "")
+  }
 }
 
 #' @importFrom htmltools htmlDependency
 #' @importFrom digest digest
 get_theme_dependency <- function(theme) {
   version <- digest(Sys.time())
+  if (is.null(shiny::getDefaultReactiveDomain())) {
+    name_html_dep <- sprintf("tabulator-htmlwidgets-css-%s", theme)
+    stylesheet <- themes_index[[theme]]
+  } else {
+    name_html_dep <- sprintf("tabulator-htmlwidgets-css-%s-%s", theme, version)
+    stylesheet <- sprintf("%s?version=%s", themes_index[[theme]], version)
+  }
   htmlDependency(
-    name = sprintf("tabulator-htmlwidgets-css-%s-%s", theme, version),
+    name = name_html_dep,
     version = "0.1",
     package = "tabulator",
     src = "htmlwidgets/dist",
-    stylesheet = sprintf("%s?version=%s", themes_index[[theme]], version),
+    stylesheet = stylesheet,
     all_files = FALSE
   )
 }

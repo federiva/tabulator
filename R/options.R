@@ -19,7 +19,9 @@ default_table_options <- list(
   )
 )
 
-other_valid_options <- c("clipboardCopyConfig", "clipboard", "clipboardPasteParser")
+other_valid_options <- c(
+  "clipboardCopyConfig", "clipboard", "clipboardPasteParser", "spreadsheet", "theme"
+)
 
 #' Add table level options to a tabulator object
 #' @param tabulator_object An object of class tabulator
@@ -65,13 +67,15 @@ test_for_valid_table_options <- function(table_options) {
   }
 }
 
-use_default_table_options <- function(tabulator) {
-  for (default_option in names(default_table_options)) {
-    if (!default_option %in% names(tabulator$x$table_options)) {
-      tabulator$x$table_options[[default_option]] <- default_table_options[[default_option]]$value
+use_default_table_options <- function(tabulator_object) {
+  if (!is_spreadsheet(tabulator_object)) {
+    for (default_option in names(default_table_options)) {
+      if (!default_option %in% names(tabulator_object$x$table_options)) {
+        tabulator_object$x$table_options[[default_option]] <- default_table_options[[default_option]]$value
+      }
     }
   }
-  tabulator
+  tabulator_object
 }
 
 #' Gets the valid table options to be passed to a tabulator object

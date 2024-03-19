@@ -17,20 +17,42 @@ HTMLWidgets.widget({
         // TODO: look for an old table and destroy it before re rendering
         window.la = el;
         window.da = x;
-        table = new Tabulator(`#${el.id}`, {
-          data: x.data,
-          layout: x.column_layout_mode,
-          filterMode: "remote", // TODO Remove this default
-          nestedFieldSeparator: "..", // TODO Remove this default
-          layoutColumnsOnNewData: x.layout_columns_on_new_data,
-          ...parseTableOptions(x),
-          ...parsePagination(x),
-          ...parseColumns(x),
-          ...parseSortMode(x),
-        });
+        if (!!x.table_options.spreadsheet) {
+          table = new Tabulator(`#${el.id}`, {
+            spreadsheet: true,
+            spreadsheetData: !!x.data ? x.data : [],
+            // spreadsheetRows: 10,
+            // spreadsheetColumns: 10,
+            spreadsheetColumnDefinition: {editor: "input"},
+            rowHeader: {
+              field: "_id",
+              frozen: true,
+              headerSort: false,
+              hozAlign: "center",
+            },
+            editorEmptyValue: undefined,
+          })
+          console.log('spreadsheet')
+        } else {
+          console.log(' not spreadsheet')
+          table = new Tabulator(`#${el.id}`, {
+            data: x.data,
+            layout: x.column_layout_mode,
+            filterMode: "remote", // TODO Remove this default
+            nestedFieldSeparator: "..", // TODO Remove this default
+            layoutColumnsOnNewData: x.layout_columns_on_new_data,
+            ...parseTableOptions(x),
+            ...parsePagination(x),
+            ...parseColumns(x),
+            ...parseSortMode(x),
+          });
+        }
+        if (!!window.Shiny) {
+          console.log("adsa")
+          subscribeTableEvents(x, el.id, table);
+          subscribeDefaultEvents(table);
+        }
         window.pala = table;
-        subscribeTableEvents(x, el.id, table);
-        subscribeDefaultEvents(table);
       },
 
       resize: function(width, height) {
@@ -83,4 +105,6 @@ removeCSSDependencies = (params) => {
   $("head link[href*='tabulator-htmlwidgets-css']").remove();
 }
 
-Shiny.addCustomMessageHandler("remove_css_dependencies", removeCSSDependencies);
+if (!!window.Shiny) {
+  Shiny.addCustomMessageHandler("remove_css_dependencies", removeCSSDependencies);
+}

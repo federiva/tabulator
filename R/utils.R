@@ -79,3 +79,7 @@ get_namespaced_id <- function(id, session = shiny::getDefaultReactiveDomain()) {
   }
   id
 }
+
+is_spreadsheet <- function(tabulator_object) {
+  isTRUE(tabulator_object$x$table_options$spreadsheet)
+}
