@@ -19,22 +19,10 @@ HTMLWidgets.widget({
         window.da = x;
         if (!!x.table_options.spreadsheet) {
           table = new Tabulator(`#${el.id}`, {
-            spreadsheet: true,
-            spreadsheetData: !!x.data ? x.data : [],
-            // spreadsheetRows: 10,
-            // spreadsheetColumns: 10,
-            spreadsheetColumnDefinition: {editor: "input"},
-            rowHeader: {
-              field: "_id",
-              frozen: true,
-              headerSort: false,
-              hozAlign: "center",
-            },
-            editorEmptyValue: undefined,
+            spreadsheetData: !!x.data ? x.data : null,
+            ...parseTableOptions(x),
           })
-          console.log('spreadsheet')
         } else {
-          console.log(' not spreadsheet')
           table = new Tabulator(`#${el.id}`, {
             data: x.data,
             layout: x.column_layout_mode,
