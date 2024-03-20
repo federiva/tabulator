@@ -13,6 +13,11 @@ const subscribeTableEvents = (x, tableId, tabulatorTable) => {
   }
 };
 
+/**
+ * Subscribes to default events of a Tabulator table and sets input values in Shiny.
+ *
+ * @param {Object} tabulatorTable - The Tabulator table instance.
+ */
 const subscribeDefaultEvents = (tabulatorTable) => {
   tabulatorTable.on("cellEditing", function(cell) {
     const cellData = {
@@ -41,6 +46,7 @@ const subscribeDefaultEvents = (tabulatorTable) => {
   tabulatorTable.on("tableBuilt", function() {
     Shiny.bindAll(document.getElementById(tabulatorTable.element.id));
   });
+
 };
 
 // Column events that can be subscribed

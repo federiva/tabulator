@@ -27,7 +27,6 @@ HTMLWidgets.widget({
             data: x.data,
             layout: x.column_layout_mode,
             filterMode: "remote", // TODO Remove this default
-            nestedFieldSeparator: "..", // TODO Remove this default
             layoutColumnsOnNewData: x.layout_columns_on_new_data,
             ...parseTableOptions(x),
             ...parsePagination(x),
