@@ -17,6 +17,9 @@ event_names <- list(
     "cellClick", "cellDblClick", "cellContext", "cellTap", "cellDblTap", "cellTapHold",
     "cellMouseEnter", "cellMouseLeave", "cellMouseOver", "cellMouseOut", "cellMouseMove",
     "cellMouseDown", "cellMouseUp"
+  ),
+  spreadsheet_events = c(
+    "sheetAdded", "sheetRemoved", "sheetLoaded", "sheetUpdated"
   )
 )
 

@@ -20,7 +20,7 @@ HTMLWidgets.widget({
         if (!!x.table_options.spreadsheet) {
           table = new Tabulator(`#${el.id}`, {
             spreadsheetData: !!x.data ? x.data : null,
-            ...parseTableOptions(x),
+            ...parseTableOptions(x, ["data"]),
           })
         } else {
           table = new Tabulator(`#${el.id}`, {
@@ -35,7 +35,6 @@ HTMLWidgets.widget({
           });
         }
         if (!!window.Shiny) {
-          console.log("adsa")
           subscribeTableEvents(x, el.id, table);
           subscribeDefaultEvents(table);
         }
@@ -84,7 +83,13 @@ const parseSortMode = x => {
   }
 }
 
-const parseTableOptions = x => {
+const parseTableOptions = (x, toRemove = null) => {
+  if (!!toRemove) {
+    // remove the toremove options
+    toRemove.forEach(option => {
+      delete x.table_options[option]
+    })
+  }
   return x.table_options
 }
 

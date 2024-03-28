@@ -8,7 +8,8 @@
 const subscribeTableEvents = (x, tableId, tabulatorTable) => {
   if (!!x.events) {
     x.events.forEach(eventName => {
-      tabulatorTable.on(eventName, getEventCallback(tableId, eventName))
+      const eventCallback = getEventCallback(tableId, eventName);
+      tabulatorTable.on(eventName, eventCallback);
     })
   }
 };
@@ -70,12 +71,33 @@ const rowEventsTypes = {
   rowEvents: ["rowAdded", "rowUpdated", "rowDeleted", "rowResized", ]
 }
 
+const spreadsheetEventsTypes = {
+  eventSpreadsheetEvents: [
+    "sheetAdded", "sheetRemoved", "sheetLoaded", "sheetUpdated",
+  ]
+}
+
 const cellEventsTypes = {
   eventCellEvents: [
     "cellClick", "cellDblClick", "cellContext", "cellTap", "cellDblTap", "cellTapHold",
     "cellMouseEnter", "cellMouseLeave", "cellMouseOver", "cellMouseOut", "cellMouseMove",
     "cellMouseDown", "cellMouseUp",
   ]
+}
+
+const spreadsheetEventCallbacks = {
+  sheetCallback: (tableId, eventName) => {
+    return function(sheet) {
+      const inputId = `${tableId}_${eventName}`;
+      window.lasheet = sheet;
+      const dataEvent = {
+        event: eventName,
+        sheet_key: sheet.getKey(),
+        sheet_name: sheet.getTitle()
+      }
+      Shiny.setInputValue(inputId, dataEvent, { priority: "event" });
+    }
+  }
 }
 
 // Column callbacks that are passed to each event
@@ -212,6 +234,9 @@ const getEventCallback  = (tableId, eventName) => {
     callback = rowEventCallbacks.rowCallback(tableId, eventName)
   } else if (cellEventsTypes.eventCellEvents.includes(eventName)) {
     callback = cellEventCallbacks.cellEventCallback(tableId, eventName)
+  } else if (spreadsheetEventsTypes.eventSpreadsheetEvents.includes(eventName)) {
+    callback = spreadsheetEventCallbacks.sheetCallback(tableId, eventName)
+    // callback = cellEventCallbacks.cellEventCallback(tableId, eventName)
   }
   return callback
 }

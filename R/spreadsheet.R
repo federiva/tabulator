@@ -138,6 +138,16 @@ clear_sheet <- function(table_id, key, session = shiny::getDefaultReactiveDomain
   )
 }
 
+
+#' Add a sheet to a spreadsheet
+#'
+#' @param table_id The ID of the table
+#' @param title The title of the sheet
+#' @param key The key of the sheet
+#' @param session The session to send the custom message to. Defaults to the default shiny session.
+#' @param ... Additional arguments to be passed to the `sheet` function.
+#' @return NULL
+#' @export
 add_sheet <- function(table_id, title, key, session = shiny::getDefaultReactiveDomain(), ...) {
   sheet_definition <- sheet(title, key, ...)
   session$sendCustomMessage(
@@ -145,6 +155,24 @@ add_sheet <- function(table_id, title, key, session = shiny::getDefaultReactiveD
     message = list(
       table_id = get_namespaced_id(table_id, session),
       sheet = sheet_definition
+    )
+  )
+}
+
+
+#' Remove a sheet from a spreadsheet
+#'
+#' @param table_id The ID of the table
+#' @param key The key of the sheet to remove
+#' @param session The session to send the custom message to. Defaults to the default shiny session.
+#' @return NULL
+#' @export
+remove_sheet <- function(table_id, key, session = shiny::getDefaultReactiveDomain()) {
+  session$sendCustomMessage(
+    type = "remove_sheet",
+    message = list(
+      table_id = get_namespaced_id(table_id, session),
+      key = key
     )
   )
 }
