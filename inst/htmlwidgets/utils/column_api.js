@@ -5,9 +5,9 @@
  * @return {void}
  */
 const hideColumnByField = (params) => {
-  tableId = params.table_id;
-  field = params.field;
-  table = getTabulatorTable(tableId);
+  const tableId = params.table_id;
+  const field = params.field;
+  const table = getTabulatorTable(tableId);
   table.getColumn(field).hide();
 }
 
@@ -48,7 +48,7 @@ const updateColumnDefinition = (params) => {
   const tableId = params.table_id;
   const field = params.field;
   const columnDefinition = params.column_definition;
-  table = getTabulatorTable(tableId);
+  const table = getTabulatorTable(tableId);
   table.getColumn(field).updateDefinition(columnDefinition);
 }
 
@@ -57,14 +57,14 @@ const addColumn = params => {
   const columnDefinition = params.column_definition;
   const before = params.before;
   const position = params.position;
-  table = getTabulatorTable(tableId);
+  const table = getTabulatorTable(tableId);
   table.addColumn(columnDefinition, before, position);
 }
 
 const deleteColumn = params => {
   const tableId = params.table_id;
   const field = params.field;
-  table = getTabulatorTable(tableId);
+  const table = getTabulatorTable(tableId);
   table.deleteColumn(field);
 }
 

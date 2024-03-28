@@ -118,3 +118,33 @@ enable_range_selection <- function(tabulator_object) {
   tabulator_object$x$table_options <- append(tabulator_object$x$table_options, range_opts)
   tabulator_object
 }
+
+#' Clear a sheet from a spreadsheet
+#' This function clears a sheet from a spreadsheet.
+#'
+#' @param table_id The ID of the table
+#'
+#' @param session The session to send the custom message to. Defaults to the default shiny session.
+#' @param key The key of the sheet to clear
+#' @return NULL
+#' @export
+clear_sheet <- function(table_id, key, session = shiny::getDefaultReactiveDomain()) {
+  session$sendCustomMessage(
+    type = "clear_sheet",
+    message = list(
+      table_id = get_namespaced_id(table_id, session),
+      key = key
+    )
+  )
+}
+
+add_sheet <- function(table_id, title, key, session = shiny::getDefaultReactiveDomain(), ...) {
+  sheet_definition <- sheet(title, key, ...)
+  session$sendCustomMessage(
+    type = "add_sheet",
+    message = list(
+      table_id = get_namespaced_id(table_id, session),
+      sheet = sheet_definition
+    )
+  )
+}

@@ -17,8 +17,8 @@ ui <- fluidPage(
     h3("Spreadsheets"),
     wellPanel(
       p(
-        "This section provides sample cases that demonstrate the usage of column
-        definitions and the usage of custom callbacks in formatter functions."
+        "This section provides sample cases that demonstrate the usage of the
+        Tabulator's Spreadsheet module."
       ),
       p(
         span("Further assistance can be accessed by exploring the "),
@@ -43,7 +43,15 @@ ui <- fluidPage(
   div(
     class = "table-container",
     h3("Editable Spreadsheet with multiple tabs"),
-    tabulatorOutput(outputId = "table_tabs")
+    tabulatorOutput(outputId = "table_tabs"),
+    h3("Actions"),
+    div(
+      class = "actions-container",
+      actionButton(
+        inputId = "clear",
+        label = "Clear Iris Sheet"
+      )
+    )
   ),
   highlighter_ui()
 )
@@ -99,6 +107,10 @@ server <- function(input, output, session) {
     input$table_tabs_edited,
     input$table_tabs_rowUpdated
   )
+
+  observeEvent(input$clear, {
+    clear_sheet(table_id = "table_tabs", key = "iris", session = session)
+  })
 
   highlighter_server(input, output, "sheet")
 }

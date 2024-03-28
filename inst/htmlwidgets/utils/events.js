@@ -175,7 +175,6 @@ const cellEventCallbacks = {
   cellEventCallback: (tableId, eventName) => {
     return function(e, cell) {
       const inputId = `${tableId}_${eventName}`;
-      window.cell = cell;
       Shiny.setInputValue(
         inputId,
         {

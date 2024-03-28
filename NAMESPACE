@@ -2,6 +2,7 @@
 
 export(add_column)
 export(clear_history)
+export(clear_sheet)
 export(column_layout_mode)
 export(copy_table)
 export(delete_column)

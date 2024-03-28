@@ -1,7 +1,7 @@
 const copyTable = params => {
   const tableId = params.table_id;
   const what = params.what;
-  table = getTabulatorTable(tableId);
+  const table = getTabulatorTable(tableId);
   table.copyToClipboard(what);
 }
 

@@ -7,19 +7,19 @@
 
 const undoAction = params => {
   const tableId = params.table_id;
-  table = getTabulatorTable(tableId);
+  const table = getTabulatorTable(tableId);
   table.undo();
 };
 
 const redoAction = params => {
   const tableId = params.table_id;
-  table = getTabulatorTable(tableId);
+  const table = getTabulatorTable(tableId);
   table.redo();
 };
 
 const clearHistory = params => {
   const tableId = params.table_id;
-  table = getTabulatorTable(tableId);
+  const table = getTabulatorTable(tableId);
   table.clearHistory();
 };
 
