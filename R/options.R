@@ -57,11 +57,12 @@ test_for_valid_table_options <- function(table_options) {
   if (length(all_options) > 0) {
     # Ensure that if default values were not provided then we use the default
     # values for these options
-    default_options <- default_table_options[setdiff(all_options, valid_options)]
+    default_options <- default_table_options[setdiff(all_options, table_options)]
+    print(default_options)
     if (length(default_options) > 0) {
       default_options <- lapply(default_options, function(x) x$value)
     }
-    append(default_options, table_options[valid_options])
+    append(default_options, table_options)
   } else {
     list()
   }

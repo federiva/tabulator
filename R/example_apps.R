@@ -8,6 +8,7 @@ get_valid_app_names <- function() {
     columns_server_pagination_one = system.file("examples", "shiny_app_server_columns_example_one.R", package = "tabulator"),
     columns_server_pagination_two = system.file("examples", "shiny_app_server_columns_example_two.R", package = "tabulator"),
     editing = system.file("examples", "shiny_app_editing.R", package = "tabulator"),
+    grouping = system.file("examples", "shiny_app_grouping.R", package = "tabulator"),
     history = system.file("examples", "shiny_app_history.R", package = "tabulator"),
     nested_field_separator = system.file("examples", "shiny_app_options_nested_field_separator.R", package = "tabulator"),
     remote_api_pagination = system.file("examples", "shiny_app_remote_api_pagination.R", package = "tabulator"),
