@@ -31,7 +31,7 @@ check_valid_event_name <- function(event_name) {
   all_events <- unlist(event_names, use.names = FALSE)
   test <- all(event_name %in% all_events)
   if (!test) {
-    #list events that are not valid
+    # list events that are not valid
     invalid_events <- setdiff(event_name, all_events)
     cli_warn(
       c(

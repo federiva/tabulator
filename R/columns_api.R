@@ -21,7 +21,7 @@ hide_column_by_field <- function(table_id, field, session = shiny::getDefaultRea
 #' @param field The field to be shown
 #' @param session The Shiny session
 #' @export
-show_column_by_field  <- function(table_id, field, session = shiny::getDefaultReactiveDomain()) {
+show_column_by_field <- function(table_id, field, session = shiny::getDefaultReactiveDomain()) {
   if (!is.null(session)) {
     table_id <- session$ns(table_id)
   }
@@ -39,7 +39,7 @@ show_column_by_field  <- function(table_id, field, session = shiny::getDefaultRe
 #' @param field The field to be shown
 #' @param session The Shiny session
 #' @export
-toggle_column_by_field  <- function(table_id, field, session = shiny::getDefaultReactiveDomain()) {
+toggle_column_by_field <- function(table_id, field, session = shiny::getDefaultReactiveDomain()) {
   if (!is.null(session)) {
     table_id <- session$ns(table_id)
   }
@@ -100,12 +100,11 @@ update_column_definition <- function(table_id, field, column_definition, session
 #' @param session The Shiny session
 #' @export
 add_column <- function(
-  table_id,
-  column_definition,
-  before = FALSE,
-  position = NULL,
-  session = shiny::getDefaultReactiveDomain()
-) {
+    table_id,
+    column_definition,
+    before = FALSE,
+    position = NULL,
+    session = shiny::getDefaultReactiveDomain()) {
   if (!is.null(session)) {
     table_id <- session$ns(table_id)
   }

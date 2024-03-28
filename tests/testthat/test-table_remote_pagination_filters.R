@@ -1,7 +1,7 @@
-
 test_that(
-  "Remote pagination header filters", {
-  skip_on_cran()
+  "Remote pagination header filters",
+  {
+    skip_on_cran()
     shiny_proc <- callr::r_bg(
       func = function() {
         library(shiny)
@@ -16,10 +16,10 @@ test_that(
     )
     app_connected <- FALSE
     connect_attempts <- 0
-    while(isFALSE(app_connected)) {
+    while (isFALSE(app_connected)) {
       app_connected <- all(is.na(pingr::ping("http://127.0.0.1:9999")))
       Sys.sleep(0.1)
-      connect_attempts <- connect_attempts+ 1
+      connect_attempts <- connect_attempts + 1
       if (connect_attempts > 20) {
         break
       }
@@ -38,7 +38,8 @@ test_that(
     column_names <- selenider::ss(".tabulator-col-title") |>
       lapply(function(x) {
         x |> selenider::elem_text()
-      }) |> unlist()
+      }) |>
+      unlist()
 
     # All of the columns were properly rendered in the expected order
     expected_column_names <- c(
@@ -420,5 +421,5 @@ test_that(
     expect_true(
       ss(".tabulator-row") |> has_length(5)
     )
-
-})
+  }
+)

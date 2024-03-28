@@ -1,4 +1,3 @@
-
 #' @importFrom glue glue
 #' @noRd
 parse_sorters_from_query_string <- function(query_string) {

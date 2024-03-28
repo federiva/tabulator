@@ -6,25 +6,24 @@
 #'
 #' @export
 tabulator <- function(
-  data = NULL,
-  width = NULL,
-  height = NULL,
-  elementId = NULL,
-  theme = "bootstrap5"
-) {
+    data = NULL,
+    width = NULL,
+    height = NULL,
+    elementId = NULL,
+    theme = "bootstrap5") {
   # forward options using x
-  params = list(
+  params <- list(
     data = data
   )
   theme <- check_is_valid_theme(theme)
-  attr(params, 'TOJSON_ARGS') <- list(dataframe = "rows")
+  attr(params, "TOJSON_ARGS") <- list(dataframe = "rows")
   # create widget
   htmlwidgets::createWidget(
-    name = 'tabulator',
+    name = "tabulator",
     x = params,
     width = width,
     height = height,
-    package = 'tabulator',
+    package = "tabulator",
     elementId = elementId,
     dependencies = get_theme_dependency(theme),
     preRenderHook = pre_render_hook
@@ -55,8 +54,8 @@ pre_render_hook <- function(tabulator) {
 #' @name tabulator-shiny
 #'
 #' @export
-tabulatorOutput <- function(outputId, width = '100%', height = '400px'){
-  htmlwidgets::shinyWidgetOutput(outputId, 'tabulator', width, height, package = 'tabulator')
+tabulatorOutput <- function(outputId, width = "100%", height = "400px") {
+  htmlwidgets::shinyWidgetOutput(outputId, "tabulator", width, height, package = "tabulator")
 }
 
 #' @rdname tabulator-shiny

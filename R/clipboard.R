@@ -1,4 +1,3 @@
-
 copy_table_valid_what_options <- c("active", "all", "selected", "visible")
 #' Copy the table to the clipboard
 #' @param table_id The ID of the table

@@ -83,8 +83,8 @@ enable_copy_paste <- function(tabulator_object) {
     clipboard = TRUE,
     clipboardCopyStyled = FALSE,
     clipboardCopyConfig = list(
-        rowHeaders = FALSE,
-        columnHeaders = FALSE
+      rowHeaders = FALSE,
+      columnHeaders = FALSE
     ),
     clipboardCopyRowRange = "range",
     clipboardPasteParser = "range",
@@ -106,7 +106,6 @@ enable_copy_paste <- function(tabulator_object) {
 #' @return The modified tabulator object
 #' @export
 enable_range_selection <- function(tabulator_object) {
-
   range_opts <- list(
     selectableRange = 1,
     selectableRangeClearCells = TRUE,

@@ -51,42 +51,45 @@ extract_unique_numbers_from_query_string <- function(query_string_names) {
 #' @noRd
 run_filter_func <- function(data_in, type, field, value) {
   # TODO Fede Oct 15 / Extract the logic of callback functions to a similar logic applied in dynamic_symbol_filter
-  tryCatch({
-    # Parse pattern to allow modified patterns when working with dbplyr
-    # See https://www.tidyverse.org/blog/2023/10/dbplyr-2-4-0/#new-translations
-    pattern <- parse_pattern(data_in, type, value)
-    if (type == "like") {
-      data_in |>
-        filter(str_detect(string = !!sym(field), pattern = pattern))
-    } else if (type == "ends") {
-      data_in |>
-        filter(str_ends(string = !!sym(field), pattern = pattern))
-    } else if (type == "regex") {
-      if (is_sqlite_backend(data_in)) {
-        cli_alert_warning("The `regex` filter is not supported in SQLite. Returning the unfiltered dataset.")
-        data_in
-      } else {
+  tryCatch(
+    {
+      # Parse pattern to allow modified patterns when working with dbplyr
+      # See https://www.tidyverse.org/blog/2023/10/dbplyr-2-4-0/#new-translations
+      pattern <- parse_pattern(data_in, type, value)
+      if (type == "like") {
         data_in |>
-          filter(grepl(x = !!sym(field), pattern = pattern))
+          filter(str_detect(string = !!sym(field), pattern = pattern))
+      } else if (type == "ends") {
+        data_in |>
+          filter(str_ends(string = !!sym(field), pattern = pattern))
+      } else if (type == "regex") {
+        if (is_sqlite_backend(data_in)) {
+          cli_alert_warning("The `regex` filter is not supported in SQLite. Returning the unfiltered dataset.")
+          data_in
+        } else {
+          data_in |>
+            filter(grepl(x = !!sym(field), pattern = pattern))
+        }
+      } else if (type == "starts") {
+        data_in |>
+          filter(str_starts(string = !!sym(field), pattern = pattern))
+      } else if (is_symbol_operator(type)) {
+        dynamic_symbol_filter(data_in, type, field, pattern)
       }
-    } else if (type == "starts") {
-      data_in |>
-        filter(str_starts(string = !!sym(field), pattern = pattern))
-    } else if (is_symbol_operator(type)) {
-      dynamic_symbol_filter(data_in, type, field, pattern)
+    },
+    error = function(cond) {
+      message <- glue(
+        "Server-side error when filtering {field} with {value} and type {type}.\n",
+        "Error: {cond$message}.\n",
+        "Returning the unfiltered dataset."
+      )
+      warn(
+        message = message,
+        class = "ErrorFilter"
+      )
+      data_in
     }
-  }, error = function(cond) {
-    message <- glue(
-      "Server-side error when filtering {field} with {value} and type {type}.\n",
-      "Error: {cond$message}.\n",
-      "Returning the unfiltered dataset."
-    )
-    warn(
-      message = message,
-      class = "ErrorFilter"
-    )
-    data_in
-  })
+  )
 }
 
 #' @importFrom stringr fixed
@@ -94,8 +97,7 @@ parse_pattern <- function(data_in, type, value) {
   if (!inherits(data_in, "tbl_lazy")) {
     value
   } else {
-    switch(
-      type,
+    switch(type,
       "like" = fixed(value),
       "ends" = fixed(value),
       "starts" = fixed(value),
@@ -119,7 +121,7 @@ match_symbol_operator <- function(type) {
 dynamic_symbol_filter <- function(data_in, type, field, value) {
   operator <- match_symbol_operator(type)
   if (is.numeric(data_in[[field]])) {
-    expr_str <- glue("{field} {operator} {value}")  
+    expr_str <- glue("{field} {operator} {value}")
   } else {
     expr_str <- glue("{field} {operator} '{value}'")
   }

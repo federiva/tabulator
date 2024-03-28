@@ -1,7 +1,7 @@
-
 test_that(
-  "Server pagination pages", {
-  skip_on_cran()
+  "Server pagination pages",
+  {
+    skip_on_cran()
     shiny_proc <- callr::r_bg(
       func = function() {
         devtools::load_all()
@@ -11,10 +11,10 @@ test_that(
     )
     app_connected <- FALSE
     connect_attempts <- 0
-    while(isFALSE(app_connected)) {
+    while (isFALSE(app_connected)) {
       app_connected <- all(is.na(pingr::ping("http://127.0.0.1:9999")))
       Sys.sleep(0.1)
-      connect_attempts <- connect_attempts+ 1
+      connect_attempts <- connect_attempts + 1
       if (connect_attempts > 20) {
         break
       }
@@ -69,5 +69,5 @@ test_that(
     expect_true(
       all(c("1", "2", "3", "4", "5") == all_values_in_column)
     )
-
-})
+  }
+)

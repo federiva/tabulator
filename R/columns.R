@@ -1,29 +1,28 @@
-
 # https://tabulator.info/docs/5.5/columns
 
-    # title - Required This is the title that will be displayed in the header for this column
-    # field - Required (not required in icon/button columns) this is the key for this column in the data array
-    # visible - (boolean, default - true) determines if the column is visible. (see Column Visibility for more details)
+# title - Required This is the title that will be displayed in the header for this column
+# field - Required (not required in icon/button columns) this is the key for this column in the data array
+# visible - (boolean, default - true) determines if the column is visible. (see Column Visibility for more details)
 
 
-    # hoz_align - sets the horizontal text alignment for this column (left|center|right)
-    # vert_align - sets the vertical text alignment for this column (top|middle|bottom)
-    # header_hoz_align - sets the horizontal text alignment for this columns header title (left|center|right)
-    # width - sets the width of this column, this can be set in pixels or as a percentage of total table width (if not set the system will determine the best)
-    # min_width - sets the minimum width of this column, this should be set in pixels
-    # max_width - sets the maximum width of this column, this should be set in pixels
-    # max_initial_width - sets the maximum width of this column when it is first rendered, the user can then resize to above this (up to the maxWidth, if set) this should be set in pixels
-    # width_grow - when using fitColumns layout mode, determines how much the column should grow to fill available space (see Table Layout for more details)
-    # width_shrink - when using fitColumns layout mode, determines how much the column should shrink to fit available space (see Table Layout for more details)
-    # resizable - set whether column can be resized by user dragging its edges (see Table Layout for more details)
-    # frozen - freezes the column in place when scrolling (see Frozen Columns for more details)
-    # responsive - an integer to determine when the column should be hidden in responsive mode (see Responsive Layout for more details)
-    # tooltip - sets the on hover tooltip for each cell in this column (see Formatting Data for more details)
-    # css_class - sets css classes on header and cells in this column. (value should be a string containing space separated class names)
-    # row_handle - sets the column as a row handle, allowing it to be used to drag movable rows. (see Movable Rows for more details)
-    # html_output - show or hide column in the getHtml function output (see Retrieve Data as HTML Table for more details)
-    # print - show or hide column in the print output (see Printing for more details)
-    # clipboard - show or hide column in the clipboard output (see Clipboard for more details)
+# hoz_align - sets the horizontal text alignment for this column (left|center|right)
+# vert_align - sets the vertical text alignment for this column (top|middle|bottom)
+# header_hoz_align - sets the horizontal text alignment for this columns header title (left|center|right)
+# width - sets the width of this column, this can be set in pixels or as a percentage of total table width (if not set the system will determine the best)
+# min_width - sets the minimum width of this column, this should be set in pixels
+# max_width - sets the maximum width of this column, this should be set in pixels
+# max_initial_width - sets the maximum width of this column when it is first rendered, the user can then resize to above this (up to the maxWidth, if set) this should be set in pixels
+# width_grow - when using fitColumns layout mode, determines how much the column should grow to fill available space (see Table Layout for more details)
+# width_shrink - when using fitColumns layout mode, determines how much the column should shrink to fit available space (see Table Layout for more details)
+# resizable - set whether column can be resized by user dragging its edges (see Table Layout for more details)
+# frozen - freezes the column in place when scrolling (see Frozen Columns for more details)
+# responsive - an integer to determine when the column should be hidden in responsive mode (see Responsive Layout for more details)
+# tooltip - sets the on hover tooltip for each cell in this column (see Formatting Data for more details)
+# css_class - sets css classes on header and cells in this column. (value should be a string containing space separated class names)
+# row_handle - sets the column as a row handle, allowing it to be used to drag movable rows. (see Movable Rows for more details)
+# html_output - show or hide column in the getHtml function output (see Retrieve Data as HTML Table for more details)
+# print - show or hide column in the print output (see Printing for more details)
+# clipboard - show or hide column in the clipboard output (see Clipboard for more details)
 
 # column header params
 # header_sort - user can sort by clicking on the header (see Sorting Data for more details)
