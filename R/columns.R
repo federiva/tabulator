@@ -1,3 +1,4 @@
+# nolint start
 # https://tabulator.info/docs/5.5/columns
 
 # title - Required This is the title that will be displayed in the header for this column
@@ -62,6 +63,7 @@
 # header_click_popup - add click popup to column header (see Column Header Popups for more details)
 # header_context_popup - add context popup to column header (see Column Header Popups for more details)
 
+# nolint end
 column_general_params <- c("title", "field", "visible")
 column_layout_params <- c(
   "hoz_align", "vert_align", "header_hoz_align", "width", "min_width",
@@ -93,7 +95,6 @@ tabulator_columns <- function(tabulator_object, columns) {
 
 #' @export
 tabulator_column <- function(...) {
-  param_names <- names(list(...))
   assert_valid_params(...)
   list(...)
 }

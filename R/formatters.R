@@ -80,7 +80,7 @@ builtin_formatters_params <- list(
 #' @export
 show_example_builtin_params <- function(builtin_formatter) {
   cli::cli_h1("Tabulator - Builtin Formatters")
-  if (!builtin_formatter %in% builtin_formatters | is.null(builtin_formatter)) {
+  if (!builtin_formatter %in% builtin_formatters || is.null(builtin_formatter)) {
     cli_inform(
       c(
         "x" = "The input formatter {builtin_formatter} is not valid. Must be one of: ",
@@ -94,8 +94,8 @@ show_example_builtin_params <- function(builtin_formatter) {
         "{names(builtin_formatters_params[[builtin_formatter]])}",
         "",
         "These should be entered as a named list to the `tabulator_column` function",
-        "i" = "Run {.run tabulator::get_example_builtin_param(\"{builtin_formatter}\")} to get an example list of parameters",
-        "{symbol$fancy_question_mark} For additional help you can check the documentation in {.url https://tabulator.info/docs/6.0/format#format-builtin}"
+        "i" = "Run {.run tabulator::get_example_builtin_param(\"{builtin_formatter}\")} to get an example list of parameters", # nolint [line_length_linter]
+        "{symbol$fancy_question_mark} For additional help you can check the documentation in {.url https://tabulator.info/docs/6.0/format#format-builtin}"  # nolint [line_length_linter]
       )
     )
   }
@@ -109,7 +109,6 @@ get_example_builtin_param <- function(builtin_formatter) {
 #' @importFrom cli cli_h1 cli_inform symbol
 #' @export
 get_builtin_formatters <- function() {
-  link <- "https://tabulator.info/docs/6.0/format"
   cli::cli_h1("Tabulator - Builtin Formatters")
   cli_inform(
     c(

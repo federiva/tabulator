@@ -11,7 +11,7 @@ available_symbol_operators <- list(
 
 #' @importFrom glue glue
 #' @noRd
-parse_filters_from_query_string <- function(query_string) {
+parse_filters_from_query_string <- function(query_string) { # nolint [object_length_linter]
   filter_names <- grep(
     pattern = "^filter\\[\\d+\\]\\[[a-zA-Z]+\\]$",
     x = names(query_string),
@@ -37,7 +37,7 @@ parse_filters_from_query_string <- function(query_string) {
 }
 
 #' @importFrom stringr str_extract
-extract_unique_numbers_from_query_string <- function(query_string_names) {
+extract_unique_numbers_from_query_string <- function(query_string_names) { # nolint [object_length_linter]
   str_extract(query_string_names, "(?<=\\[)\\d+(?=\\])") |>
     unique() |>
     as.numeric()

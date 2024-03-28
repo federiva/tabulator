@@ -6,7 +6,7 @@ column_layout_modes <- c(
 #' Available Column Layout Modes
 #' @return A character The available options to set the column layout mode
 #' @export
-get_available_column_layout_modes <- function() {
+get_available_column_layout_modes <- function() {  # nolint [object_length_linter]
   column_layout_modes
 }
 

@@ -78,7 +78,7 @@ server <- function(input, output, session) {
 
   output$table_empty <- renderTabulator({
     tabulator()  |>
-    spreadsheet()
+      spreadsheet()
   })
 
   output$table_data <- renderTabulator({
@@ -88,7 +88,7 @@ server <- function(input, output, session) {
 
   output$table_tabs <- renderTabulator({
     tabulator()  |>
-        spreadsheet(
+      spreadsheet(
         history = TRUE,
         editTriggerEvent = "dblclick",
         spreadsheetColumnDefinition = list(editor = "input"),
@@ -103,14 +103,14 @@ server <- function(input, output, session) {
           sheet("Iris", key = "iris", data = datasets::iris)
         )
       ) |>
-        enable_copy_paste() |>
-        enable_range_selection() |>
-        subscribe_events(
-          c(
-            "sheetAdded", "sheetRemoved", "sheetLoaded", "sheetUpdated",
-            "rowAdded"
-          )
+      enable_copy_paste() |>
+      enable_range_selection() |>
+      subscribe_events(
+        c(
+          "sheetAdded", "sheetRemoved", "sheetLoaded", "sheetUpdated",
+          "rowAdded"
         )
+      )
   })
 
   observe({

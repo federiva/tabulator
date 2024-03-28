@@ -60,7 +60,12 @@ get_available_pagination_modes <- function() {
 #' @return An object of class tabulator
 #'
 #' @export
-pagination <- function(tabulator_object, mode = "local", pagination_size = 10, pagination_initial_page = 1, request_handler = NULL) {
+pagination <- function(
+    tabulator_object,
+    mode = "local",
+    pagination_size = 10,
+    pagination_initial_page = 1,
+    request_handler = NULL) {
   if (test_for_valid_pagination_mode(mode)) {
     tabulator_object$x$pagination <- TRUE
     tabulator_object <- set_pagination_mode(tabulator_object, mode, request_handler)

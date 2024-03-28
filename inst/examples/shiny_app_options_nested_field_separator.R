@@ -33,16 +33,16 @@ ui <- fluidPage(
 
 server <- function(input, output, session) {
 
-    output$table <- renderTabulator({
-      tabulator(input_data) |>
-        tabulator_options(
-          nestedFieldSeparator = "__"
-        )
-    })
+  output$table <- renderTabulator({
+    tabulator(input_data) |>
+      tabulator_options(
+        nestedFieldSeparator = "__"
+      )
+  })
 
-    output$example_data <- renderTable(input_data)
+  output$example_data <- renderTable(input_data)
 
-    highlighter_server(input, output, "nested_field_separator")
+  highlighter_server(input, output, "nested_field_separator")
 }
 
 shinyApp(ui, server)

@@ -59,88 +59,88 @@ ui <- fluidPage(
 
 server <- function(input, output, session) {
 
-    # Latest event reactive Value
-    latest_event <- reactiveVal()
+  # Latest event reactive Value
+  latest_event <- reactiveVal()
 
-    observeEvent(input$toggle_letters_eq, {
-      toggle_column_by_field(
-        table_id = "table",
-        field = "letters_eq",
-        session = session
-      )
-    })
+  observeEvent(input$toggle_letters_eq, {
+    toggle_column_by_field(
+      table_id = "table",
+      field = "letters_eq",
+      session = session
+    )
+  })
 
-    # Subscribe to events
-    output$table <- renderTabulator({
-      tabulator(example_data) |>
-        tabulator_options(
-          movableColumns = TRUE
-        ) |>
-        tabulator_columns(
-          list(
-            tabulator_column(
-              title = "let =",
-              field = "letters_eq"
-            ),
-            tabulator_column(
-              title = "let in",
-              field = "letters_in"
-            ),
-            tabulator_column(
-              title = "eq =",
-              field = "numbers_eq"
-            ),
-            tabulator_column(
-              title = "neq !=",
-              field = "numbers_ne"
-            ),
-            tabulator_column(
-              title = "gt >",
-              field = "numbers_gt"
-            ),
-            tabulator_column(
-              title = "gte >=",
-              field = "numbers_gte"
-            ),
-            tabulator_column(
-              title = "lt <",
-              field = "numbers_lt"
-            ),
-            tabulator_column(
-              title = "lte <=",
-              field = "numbers_lte"
-            ),
-            tabulator_column(
-              title = "regex",
-              field = "letters_regex"
-            ),
-            tabulator_column(
-              title = "ends",
-              field = "letters_ends"
-            ),
-            tabulator_column(
-              title = "starts",
-              field = "letters_starts"
-            )
+  # Subscribe to events
+  output$table <- renderTabulator({
+    tabulator(example_data) |>
+      tabulator_options(
+        movableColumns = TRUE
+      ) |>
+      tabulator_columns(
+        list(
+          tabulator_column(
+            title = "let =",
+            field = "letters_eq"
+          ),
+          tabulator_column(
+            title = "let in",
+            field = "letters_in"
+          ),
+          tabulator_column(
+            title = "eq =",
+            field = "numbers_eq"
+          ),
+          tabulator_column(
+            title = "neq !=",
+            field = "numbers_ne"
+          ),
+          tabulator_column(
+            title = "gt >",
+            field = "numbers_gt"
+          ),
+          tabulator_column(
+            title = "gte >=",
+            field = "numbers_gte"
+          ),
+          tabulator_column(
+            title = "lt <",
+            field = "numbers_lt"
+          ),
+          tabulator_column(
+            title = "lte <=",
+            field = "numbers_lte"
+          ),
+          tabulator_column(
+            title = "regex",
+            field = "letters_regex"
+          ),
+          tabulator_column(
+            title = "ends",
+            field = "letters_ends"
+          ),
+          tabulator_column(
+            title = "starts",
+            field = "letters_starts"
           )
-        ) |>
-        subscribe_events(input$event)
-    })
+        )
+      ) |>
+      subscribe_events(input$event)
+  })
 
-    # Adding observers for each one of the events
-    purrr::map(events_list, function(event) {
-      input_name <- sprintf("table_%s", event)
-      observeEvent(input[[input_name]], {
-        latest_event(input[[input_name]])
-      })
+  # Adding observers for each one of the events
+  purrr::map(events_list, function(event) {
+    input_name <- sprintf("table_%s", event)
+    observeEvent(input[[input_name]], {
+      latest_event(input[[input_name]])
     })
+  })
 
-    # Display the latest event data in the UI
-    output$table_events <- renderText({
-      jsonlite::toJSON(latest_event())
-    })
+  # Display the latest event data in the UI
+  output$table_events <- renderText({
+    jsonlite::toJSON(latest_event())
+  })
 
-    highlighter_server(input, output, "table_events")
+  highlighter_server(input, output, "table_events")
 }
 
 shinyApp(ui, server)

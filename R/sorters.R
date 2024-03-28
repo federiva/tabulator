@@ -1,6 +1,6 @@
 #' @importFrom glue glue
 #' @noRd
-parse_sorters_from_query_string <- function(query_string) {
+parse_sorters_from_query_string <- function(query_string) { # nolint [object_length_linter]
   sorter_names <- grep(
     pattern = "^sort\\[\\d+\\]\\[[a-zA-Z]+\\]$",
     x = names(query_string),

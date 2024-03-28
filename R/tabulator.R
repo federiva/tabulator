@@ -9,7 +9,7 @@ tabulator <- function(
     data = NULL,
     width = NULL,
     height = NULL,
-    elementId = NULL,
+    elementId = NULL, # nolint [object_name_linter]
     theme = "bootstrap5") {
   # forward options using x
   params <- list(
@@ -54,13 +54,13 @@ pre_render_hook <- function(tabulator) {
 #' @name tabulator-shiny
 #'
 #' @export
-tabulatorOutput <- function(outputId, width = "100%", height = "400px") {
+tabulatorOutput <- function(outputId, width = "100%", height = "400px") { # nolint [object_name_linter]
   htmlwidgets::shinyWidgetOutput(outputId, "tabulator", width, height, package = "tabulator")
 }
 
 #' @rdname tabulator-shiny
 #' @export
-renderTabulator <- function(expr, env = parent.frame(), quoted = FALSE) {
+renderTabulator <- function(expr, env = parent.frame(), quoted = FALSE) { # nolint [object_name_linter]
   if (!quoted) {
     expr <- substitute(expr)
   }

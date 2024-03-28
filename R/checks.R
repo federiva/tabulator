@@ -9,7 +9,7 @@ run_checks <- function(tabulator_object) {
 #' data frame does not contain the same characters as the nestedFieldSeparator
 #' either specified by the user or the one used as default.
 #' @noRd
-check_for_valid_nested_separator <- function(tabulator_object) {
+check_for_valid_nested_separator <- function(tabulator_object) { # nolint
   if (!is_spreadsheet(tabulator_object)) {
     data <- tabulator_object$x$data
     nested_field_sep <- tabulator_object$x$table_options$nestedFieldSeparator

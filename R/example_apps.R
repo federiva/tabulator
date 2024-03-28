@@ -1,3 +1,4 @@
+# nolint start
 get_valid_app_names <- function() {
   list(
     builtin_formatters = system.file("examples", "shiny_app_builtin_formatters.R", package = "tabulator"),
@@ -20,7 +21,7 @@ get_valid_app_names <- function() {
     theme = system.file("examples", "shiny_app_theme.R", package = "tabulator")
   )
 }
-
+# nolint end
 #' Run an example app
 #' @importFrom shiny runApp
 #' @importFrom cli cli_abort

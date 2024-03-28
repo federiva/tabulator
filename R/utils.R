@@ -25,7 +25,7 @@ check_for_valid_column_names <- function(data, nested_field_separator) {
   columns <- colnames(data)
   test <- any(grepl(str_escape(nested_field_separator), columns))
   if (test) {
-    invalid_columns <- grep(str_escape(nested_field_separator), columns, value = TRUE)
+    invalid_columns <- grep(str_escape(nested_field_separator), columns, value = TRUE) # nolint [object_usage_linter]
     cli_alert_warning(
       text = c(
         "The {invalid_columns} column{?s} will not be rendered as ",

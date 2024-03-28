@@ -1,4 +1,4 @@
-DEFAULT_THEME <- "bootstrap5"
+DEFAULT_THEME <- "bootstrap5" # nolint [object_name_linter]
 themes_index <- list(
   simple = "css/tabulator_simple.min.css",
   midnight = "css/tabulator_midnight.min.css",
