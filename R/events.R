@@ -20,6 +20,9 @@ event_names <- list(
   ),
   spreadsheet_events = c(
     "sheetAdded", "sheetRemoved", "sheetLoaded", "sheetUpdated"
+  ),
+  validation_events = c(
+    "validationFailed"
   )
 )
 

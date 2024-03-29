@@ -85,6 +85,10 @@ const cellEventsTypes = {
   ]
 }
 
+const validationEventsTypes = {
+  eventCellEvents: ["validationFailed", ],
+};
+
 const spreadsheetEventCallbacks = {
   sheetCallback: (tableId, eventName) => {
     return function(sheet) {
@@ -211,6 +215,26 @@ const cellEventCallbacks = {
   }
 }
 
+const validationEventCallbacks = {
+  validationEventCallback: (tableId, eventName) => {
+    return function(cell, value, validators) {
+      const inputId = `${tableId}_${eventName}`;
+      Shiny.setInputValue(
+        inputId,
+        {
+          event: eventName,
+          value: value,
+          field: cell.getColumn().getField(),
+          row_position: cell.getRow().getPosition(),
+          validators: validators
+        },
+        { priority: "event" }
+      );
+    }
+  }
+}
+
+
 /**
  * Get the event callback for a specific table and event name.
  *
@@ -236,7 +260,8 @@ const getEventCallback  = (tableId, eventName) => {
     callback = cellEventCallbacks.cellEventCallback(tableId, eventName)
   } else if (spreadsheetEventsTypes.eventSpreadsheetEvents.includes(eventName)) {
     callback = spreadsheetEventCallbacks.sheetCallback(tableId, eventName)
-    // callback = cellEventCallbacks.cellEventCallback(tableId, eventName)
+  } else if (validationEventsTypes.eventCellEvents.includes(eventName)) {
+    callback = validationEventCallbacks.validationEventCallback(tableId, eventName)
   }
   return callback
 }

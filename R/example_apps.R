@@ -18,7 +18,8 @@ get_valid_app_names <- function() {
     server_pagination = system.file("examples", "shiny_app_server_pagination.R", package = "tabulator"),
     sheet = system.file("examples", "shiny_app_sheet.R", package = "tabulator"),
     table_events = system.file("examples", "shiny_app_events.R", package = "tabulator"),
-    theme = system.file("examples", "shiny_app_theme.R", package = "tabulator")
+    theme = system.file("examples", "shiny_app_theme.R", package = "tabulator"),
+    validation = system.file("examples", "shiny_app_validation.R", package = "tabulator")
   )
 }
 # nolint end
