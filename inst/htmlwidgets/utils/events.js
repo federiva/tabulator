@@ -216,6 +216,13 @@ const cellEventCallbacks = {
 }
 
 const validationEventCallbacks = {
+  /**
+   * A function that handles a validation event callback.
+   *
+   * @param {string} tableId - the ID of the table
+   * @param {string} eventName - the name of the event
+   * @return {function} a function that takes cell, value, and validators as parameters
+   */
   validationEventCallback: (tableId, eventName) => {
     return function(cell, value, validators) {
       const inputId = `${tableId}_${eventName}`;
