@@ -15,6 +15,8 @@ get_valid_app_names <- function() {
     remote_api_pagination = system.file("examples", "shiny_app_remote_api_pagination.R", package = "tabulator"),
     remote_db_pagination = system.file("examples", "shiny_app_remote_database_pagination.R", package = "tabulator"),
     remote_db_pagination_postgres = system.file("examples", "shiny_app_remote_database_pagination_postgres.R", package = "tabulator"),
+    remote_db_pagination_mysql = system.file("examples", "shiny_app_remote_database_pagination_mysql.R", package = "tabulator"),
+    remote_db_pagination_duckdb = system.file("examples", "shiny_app_remote_database_pagination_duckdb.R", package = "tabulator"),
     server_pagination = system.file("examples", "shiny_app_server_pagination.R", package = "tabulator"),
     sheet = system.file("examples", "shiny_app_sheet.R", package = "tabulator"),
     table_events = system.file("examples", "shiny_app_events.R", package = "tabulator"),
