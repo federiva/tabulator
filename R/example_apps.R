@@ -15,6 +15,7 @@ get_valid_app_names <- function() {
     remote_api_pagination = system.file("examples", "shiny_app_remote_api_pagination.R", package = "tabulator"),
     remote_db_pagination = system.file("examples", "shiny_app_remote_database_pagination.R", package = "tabulator"),
     remote_db_pagination_postgres = system.file("examples", "shiny_app_remote_database_pagination_postgres.R", package = "tabulator"),
+    remote_db_pagination_postgres_sql = system.file("examples", "shiny_app_remote_database_pagination_postgres_sql.R", package = "tabulator"),
     remote_db_pagination_mysql = system.file("examples", "shiny_app_remote_database_pagination_mysql.R", package = "tabulator"),
     remote_db_pagination_duckdb = system.file("examples", "shiny_app_remote_database_pagination_duckdb.R", package = "tabulator"),
     server_pagination = system.file("examples", "shiny_app_server_pagination.R", package = "tabulator"),
@@ -28,6 +29,7 @@ get_valid_app_names <- function() {
 #' Run an example app
 #' @importFrom shiny runApp
 #' @importFrom cli cli_abort
+#' @importFrom utils menu
 #' @param app_name The name of the app to run
 #' @param port The port to run the app on
 #' @export

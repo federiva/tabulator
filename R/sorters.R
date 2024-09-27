@@ -24,7 +24,7 @@ parse_sorters_from_query_string <- function(query_string) { # nolint [object_len
 }
 
 
-#' @importFrom dplyr arrange sym
+#' @importFrom dplyr arrange desc sym
 run_sorter_func <- function(data_in, field, direction) {
   if (direction == "asc") {
     data_in |>

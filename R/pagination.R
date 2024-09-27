@@ -55,7 +55,7 @@ get_available_pagination_modes <- function() {
 #' @param request_handler A function with the data and req parameters that is
 #' passed as the `filterFunc` argument of `session$registerDataObj`
 #'
-#' @seealso [tabulator documentation](https://tabulator.info/docs/5.5/page)
+#' @seealso [tabulator documentation](https://tabulator.info/docs/6.2/page)
 #'
 #' @return An object of class tabulator
 #'
@@ -164,12 +164,15 @@ set_pagination_mode <- function(tabulator_object, mode, request_handler = NULL) 
   tabulator_object
 }
 
-#' Default Request Handler for SQLite
+#' Default Request Handler for SQL
+#' Intended to be used with a database connection along with pagination when constructing
+#' the table.
+#' @param tbl_db A tbl object. Could be a lazy table from the dplyr package.
 #' @importFrom dplyr tbl collect
 #' @importFrom jsonlite toJSON
-#' @importFrom shiny httpResponse
+#' @importFrom shiny httpResponse parseQueryString
 #' @export
-sqlite_request_handler <- function(tbl_db) {
+default_sql_request_handler <- function(tbl_db) {
   function(data, req) {
     query_string <- parseQueryString(req$QUERY_STRING)
     page_size <- as.numeric(query_string$size)
@@ -195,9 +198,4 @@ sqlite_request_handler <- function(tbl_db) {
       content = serialized_data
     )
   }
-}
-
-#' @export
-use_sqlite_request_handler <- function(tbl_db) {
-  sqlite_request_handler(tbl_db)
 }

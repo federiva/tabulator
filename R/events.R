@@ -1,5 +1,5 @@
 # API for interacting with JS events
-# https://tabulator.info/docs/6.0/events#main-contents
+# https://tabulator.info/docs/6.2/events#main-contents
 
 event_names <- list(
   column_events = c(

@@ -23,7 +23,7 @@ ui <- fluidPage(
       p(
         span("Further assistance can be accessed by exploring the "),
         tags$a(
-          href = "https://tabulator.info/docs/6.0/spreadsheet",
+          href = "https://tabulator.info/docs/6.2/spreadsheet",
           target = "_blank",
           "Tabulator's documentation."
         )
@@ -69,6 +69,7 @@ ui <- fluidPage(
 )
 
 # Adding more data to our sample dataset
+people_data <- people_data
 people_data$line_wrapping <- "Lorem ipsum dolor sit amet, elit consectetur adipisicing "
 # Adding random numbers
 people_data$money <- round(runif(10, 10e2, 10e4), 2)

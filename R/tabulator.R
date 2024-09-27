@@ -2,6 +2,11 @@
 #'
 #' Renders a tabulator table
 #'
+#' @param data A data frame or tibble
+#' @param width The width of the widget
+#' @param height The height of the widget
+#' @param elementId The ID of the widget
+#' @param theme The theme of the widget
 #' @import htmlwidgets
 #'
 #' @export
@@ -11,13 +16,11 @@ tabulator <- function(
     height = NULL,
     elementId = NULL, # nolint [object_name_linter]
     theme = "bootstrap5") {
-  # forward options using x
   params <- list(
     data = data
   )
   theme <- check_is_valid_theme(theme)
   attr(params, "TOJSON_ARGS") <- list(dataframe = "rows")
-  # create widget
   htmlwidgets::createWidget(
     name = "tabulator",
     x = params,

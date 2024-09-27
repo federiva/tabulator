@@ -1,4 +1,4 @@
-# https://tabulator.info/docs/5.5/layout#layout
+# https://tabulator.info/docs/6.2/layout#layout
 column_layout_modes <- c(
   "fitData", "fitDataFill", "fitDataStretch", "fitDataTable", "fitColumns"
 )
@@ -21,7 +21,7 @@ get_available_column_layout_modes <- function() {  # nolint [object_length_linte
 #' true.
 #' @param tabulator_object An object of class tabulator
 #'
-#' @seealso [tabulator documentation](https://tabulator.info/docs/5.5/layout#layoutcolumnsonnewdata)
+#' @seealso [tabulator documentation](https://tabulator.info/docs/6.2/layout#layoutcolumnsonnewdata)
 #'
 #' @return An object of class tabulator
 #'
@@ -42,7 +42,7 @@ set_layout_columns_on_new_data <- function(tabulator_object) {
 #'
 #' @return An object of class tabulator
 #'
-#' @seealso [tabulator documentation](https://tabulator.info/docs/5.5/layout#layout)
+#' @seealso [tabulator documentation](https://tabulator.info/docs/6.2/layout#layout)
 #' @seealso `get_available_column_layout_modes()` for a list of the available
 #' modes.
 #'

@@ -8,6 +8,8 @@ undo_action(table_id, session = shiny::getDefaultReactiveDomain())
 }
 \arguments{
 \item{table_id}{The ID of the table}
+
+\item{session}{The Shiny session object}
 }
 \description{
 Undo an action for the given table

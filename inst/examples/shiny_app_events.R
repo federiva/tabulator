@@ -31,7 +31,7 @@ ui <- fluidPage(
       p(
         span("Further assistance can be accessed by exploring the "),
         tags$a(
-          href = "https://tabulator.info/docs/6.0/events",
+          href = "https://tabulator.info/docs/6.2/events",
           target = "_blank",
           "Tabulator's documentation."
         )

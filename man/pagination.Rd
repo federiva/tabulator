@@ -45,5 +45,5 @@ An object of class tabulator
 Paginate records shown in the table
 }
 \seealso{
-\href{https://tabulator.info/docs/5.5/page}{tabulator documentation}
+\href{https://tabulator.info/docs/6.2/page}{tabulator documentation}
 }

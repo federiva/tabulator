@@ -19,7 +19,7 @@ You can choose how your table should layout its columns by setting the
 layout mode.
 }
 \seealso{
-\href{https://tabulator.info/docs/5.5/layout#layout}{tabulator documentation}
+\href{https://tabulator.info/docs/6.2/layout#layout}{tabulator documentation}
 
 \code{get_available_column_layout_modes()} for a list of the available
 modes.

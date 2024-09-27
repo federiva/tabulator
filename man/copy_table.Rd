@@ -11,6 +11,8 @@ copy_table(table_id, what = "all", session = shiny::getDefaultReactiveDomain())
 
 \item{what}{Which rows to copy. Available options are
 "active", "all", "selected", "visible"}
+
+\item{session}{The Shiny session object}
 }
 \description{
 Copy the table to the clipboard

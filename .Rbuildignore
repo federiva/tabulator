@@ -1,3 +1,6 @@
 ^tabulator\.Rproj$
 ^\.Rproj\.user$
 _\.new\.png$
+^LICENSE\.md$
+^docs$
+^\.lintr$

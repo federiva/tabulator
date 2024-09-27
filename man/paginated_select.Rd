@@ -4,7 +4,16 @@
 \alias{paginated_select}
 \title{Helper function to get paginated data}
 \usage{
-paginated_select(.data, limit = 10, page = 1, ...)
+paginated_select(.data, page_size = 10, page = 1, ...)
+}
+\arguments{
+\item{.data}{A data frame or tibble}
+
+\item{page_size}{The number of rows per page}
+
+\item{page}{The current page number}
+
+\item{...}{Additional columns to select}
 }
 \description{
 Helper function to get paginated data

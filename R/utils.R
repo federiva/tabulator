@@ -50,25 +50,31 @@ assert_is_named <- function(x) {
 }
 
 #' Helper function to get paginated data
+#' @param .data A data frame or tibble
+#' @param page_size The number of rows per page
+#' @param page The current page number
+#' @param ... Additional columns to select
 #' @importFrom dbplyr sql_render
 #' @importFrom dplyr select tbl everything sql
-paginated_select <- function(.data, limit = 10, page = 1, ...) {
+paginated_select <- function(.data, page_size = 10, page = 1, ...) {
   query <- .data |>
     select(if (length(list(...)) > 0) ... else everything())
-  offset <- (page - 1) * limit
+  offset <- (page - 1) * page_size
   sql_query <- sql_render(query)
-  custom_sql <- paste0(sql_query, " LIMIT ", limit, " OFFSET ", offset)
+  custom_sql <- paste0(sql_query, " LIMIT ", page_size, " OFFSET ", offset)
   tbl(.data$src$con, sql(custom_sql))
 }
 
 
 #' Helper function to get total number of pages
+#' @param .data A data frame or tibble
+#' @param page_size The number of rows per page
 #' @importFrom  dplyr count collect pull
 get_total_pages <- function(.data, page_size = 10) {
   numerator <- .data |>
-    count() |>
+    count(name = "count") |>
     collect() |>
-    pull(n)
+    pull(count)
   ceiling(numerator / page_size)
 }
 

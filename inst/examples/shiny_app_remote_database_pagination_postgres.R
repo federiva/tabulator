@@ -49,7 +49,7 @@ server <- function(input, output, session) {
     user = user,
     password = password
   )
-  dbWriteTable(con, "example_data", example_data, overwrite = TRUE)
+  dbWriteTable(con, "example_data", example_data, overwrite = TRUE, temporary = TRUE)
   db_data <- tbl(con, "example_data")
 
   output$table <- renderTabulator({
@@ -128,7 +128,7 @@ server <- function(input, output, session) {
       pagination(
         pagination_size = 5,
         mode = "remote",
-        request_handler = use_sqlite_request_handler(db_data)
+        request_handler = default_sql_request_handler(db_data)
       ) |>
       set_layout_columns_on_new_data()
   })

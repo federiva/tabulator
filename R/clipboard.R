@@ -3,6 +3,7 @@ copy_table_valid_what_options <- c("active", "all", "selected", "visible")
 #' @param table_id The ID of the table
 #' @param what Which rows to copy. Available options are
 #' "active", "all", "selected", "visible"
+#' @param session The Shiny session object
 #' @importFrom shiny getDefaultReactiveDomain
 #' @importFrom cli cli_warn
 #' @export

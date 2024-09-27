@@ -4,6 +4,12 @@
     <loc>/404.html</loc>
   </url>
   <url>
+    <loc>/LICENSE-text.html</loc>
+  </url>
+  <url>
+    <loc>/LICENSE.html</loc>
+  </url>
+  <url>
     <loc>/authors.html</loc>
   </url>
   <url>
@@ -34,6 +40,9 @@
     <loc>/reference/copy_table.html</loc>
   </url>
   <url>
+    <loc>/reference/default_sql_request_handler.html</loc>
+  </url>
+  <url>
     <loc>/reference/delete_column.html</loc>
   </url>
   <url>
@@ -52,10 +61,19 @@
     <loc>/reference/get_available_pagination_modes.html</loc>
   </url>
   <url>
+    <loc>/reference/get_builtin_formatters.html</loc>
+  </url>
+  <url>
+    <loc>/reference/get_example_builtin_param.html</loc>
+  </url>
+  <url>
     <loc>/reference/get_total_pages.html</loc>
   </url>
   <url>
     <loc>/reference/get_valid_event_names.html</loc>
+  </url>
+  <url>
+    <loc>/reference/get_valid_theme_names.html</loc>
   </url>
   <url>
     <loc>/reference/hide_column_by_field.html</loc>
@@ -68,6 +86,9 @@
   </url>
   <url>
     <loc>/reference/pagination.html</loc>
+  </url>
+  <url>
+    <loc>/reference/people_data.html</loc>
   </url>
   <url>
     <loc>/reference/redo_action.html</loc>
@@ -94,10 +115,10 @@
     <loc>/reference/show_example_app_names.html</loc>
   </url>
   <url>
-    <loc>/reference/spreadsheet.html</loc>
+    <loc>/reference/show_example_builtin_params.html</loc>
   </url>
   <url>
-    <loc>/reference/sqlite_request_handler.html</loc>
+    <loc>/reference/spreadsheet.html</loc>
   </url>
   <url>
     <loc>/reference/subscribe_events.html</loc>
@@ -107,6 +128,12 @@
   </url>
   <url>
     <loc>/reference/tabulator.html</loc>
+  </url>
+  <url>
+    <loc>/reference/tabulator_column.html</loc>
+  </url>
+  <url>
+    <loc>/reference/tabulator_columns.html</loc>
   </url>
   <url>
     <loc>/reference/tabulator_options.html</loc>

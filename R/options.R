@@ -22,7 +22,7 @@ default_table_options <- list(
 #' Add table level options to a tabulator object
 #' @param tabulator_object An object of class tabulator
 #' @param ... A list of options to be added as named parameters
-#' @seealso [tabulator documentation](https://tabulator.info/docs/6.0/layout)
+#' @seealso [tabulator documentation](https://tabulator.info/docs/6.2/layout)
 #' @importFrom rlang list2
 tabulator_options <- function(tabulator_object, ...) {
   table_options <- list2(...)

@@ -56,6 +56,7 @@ run_filter_func <- function(data_in, type, field, value) {
       # Parse pattern to allow modified patterns when working with dbplyr
       # See https://www.tidyverse.org/blog/2023/10/dbplyr-2-4-0/#new-translations
       pattern <- parse_pattern(data_in, type, value)
+
       if (type == "like") {
         data_in |>
           filter(str_detect(string = !!sym(field), pattern = pattern))
@@ -121,6 +122,7 @@ match_symbol_operator <- function(type) {
 dynamic_symbol_filter <- function(data_in, type, field, value) {
   operator <- match_symbol_operator(type)
   if (is.numeric(data_in[[field]])) {
+    browser()
     expr_str <- glue("{field} {operator} {value}")
   } else {
     expr_str <- glue("{field} {operator} '{value}'")

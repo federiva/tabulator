@@ -12,6 +12,7 @@ themes_index <- list(
   materialize = "css/tabulator_materialize.min.css"
 )
 
+#' Get the list of valid themes
 #' @export
 get_valid_theme_names <- function() {
   names(themes_index)

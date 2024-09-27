@@ -6,6 +6,11 @@
 \usage{
 get_total_pages(.data, page_size = 10)
 }
+\arguments{
+\item{.data}{A data frame or tibble}
+
+\item{page_size}{The number of rows per page}
+}
 \description{
 Helper function to get total number of pages
 }

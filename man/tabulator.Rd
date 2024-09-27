@@ -12,6 +12,17 @@ tabulator(
   theme = "bootstrap5"
 )
 }
+\arguments{
+\item{data}{A data frame or tibble}
+
+\item{width}{The width of the widget}
+
+\item{height}{The height of the widget}
+
+\item{elementId}{The ID of the widget}
+
+\item{theme}{The theme of the widget}
+}
 \description{
 Renders a tabulator table
 }

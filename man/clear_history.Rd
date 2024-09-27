@@ -8,6 +8,8 @@ clear_history(table_id, session = shiny::getDefaultReactiveDomain())
 }
 \arguments{
 \item{table_id}{The ID of the table}
+
+\item{session}{The Shiny session object}
 }
 \description{
 Clear history for the given table

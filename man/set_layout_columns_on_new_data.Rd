@@ -22,5 +22,5 @@ load it into the table you can set the layoutColumnsOnNewData property to
 true.
 }
 \seealso{
-\href{https://tabulator.info/docs/5.5/layout#layoutcolumnsonnewdata}{tabulator documentation}
+\href{https://tabulator.info/docs/6.2/layout#layoutcolumnsonnewdata}{tabulator documentation}
 }

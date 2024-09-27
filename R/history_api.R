@@ -1,5 +1,6 @@
 #' Undo an action for the given table
 #' @param table_id The ID of the table
+#' @param session The Shiny session object
 #' @importFrom shiny getDefaultReactiveDomain
 #' @export
 undo_action <- function(table_id, session = shiny::getDefaultReactiveDomain()) {
@@ -11,6 +12,7 @@ undo_action <- function(table_id, session = shiny::getDefaultReactiveDomain()) {
 
 #' Redo an action for the given table
 #' @param table_id The ID of the table
+#' @param session The Shiny session object
 #' @importFrom shiny getDefaultReactiveDomain
 #' @export
 redo_action <- function(table_id, session = shiny::getDefaultReactiveDomain()) {
@@ -22,6 +24,7 @@ redo_action <- function(table_id, session = shiny::getDefaultReactiveDomain()) {
 
 #' Clear history for the given table
 #' @param table_id The ID of the table
+#' @param session The Shiny session object
 #' @importFrom shiny getDefaultReactiveDomain
 #' @export
 clear_history <- function(table_id, session = shiny::getDefaultReactiveDomain()) {

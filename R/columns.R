@@ -1,5 +1,5 @@
 # nolint start
-# https://tabulator.info/docs/5.5/columns
+# https://tabulator.info/docs/6.2/columns
 
 # title - Required This is the title that will be displayed in the header for this column
 # field - Required (not required in icon/button columns) this is the key for this column in the data array
@@ -87,12 +87,18 @@ column_header_params <- c(
   "headerClickPopup", "headerContextPopup"
 )
 
+#' Set the columns for a tabulator object
+#' @param tabulator_object A tabulator object
+#' @param columns A list of columns
 #' @export
 tabulator_columns <- function(tabulator_object, columns) {
   tabulator_object$x$columns <- columns
   tabulator_object
 }
 
+#' Tabulator column constructor
+#' See https://tabulator.info/docs/6.2/columns#definition for more details.
+#' @param ... Named arguments to be passed to the column.
 #' @export
 tabulator_column <- function(...) {
   assert_valid_params(...)
