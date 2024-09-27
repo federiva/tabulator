@@ -1,4 +1,3 @@
-devtools::load_all()
 library(shiny)
 library(tabulator)
 library(callr)
@@ -6,8 +5,8 @@ library(callr)
 # Callback function to run the API in a background process
 run_api <- function() {
   library(plumber)
-  pr <- plumb(file=file.path(here::here(), "inst", "examples", "example_api.R"))
-  pr$run(port=5826)
+  pr <- plumb(file = file.path(here::here(), "inst", "examples", "example_api.R"))
+  pr$run(port = 5826)
 }
 
 # RUN API in a background process
@@ -18,8 +17,10 @@ close_api <- function() {
   background_api$kill()
 }
 
+
 ui <- fluidPage(
-  tabulatorOutput("table")
+  tabulatorOutput("table"),
+  highlighter_ui()
 )
 
 # Set the URL
@@ -41,24 +42,23 @@ custom_handler <- function(data, req) {
   )
 }
 
-
 server <- function(input, output, session) {
-# When the data is obtained from a remote source then the data argument
-# of the tabulator function could be empty/NULL
-    output$table <- renderTabulator({
-      tabulator() |>
-        column_layout_mode("fitColumns") |>
-        set_layout_columns_on_new_data() |>
-        pagination(
-          pagination_size = 10,
-          mode = "remote",
-          request_handler = custom_handler
-        )
-    })
+  # When the data is obtained from a remote source then the data argument
+  # of the tabulator function could be empty/NULL
+  output$table <- renderTabulator({
+    tabulator() |>
+      column_layout_mode("fitColumns") |>
+      set_layout_columns_on_new_data() |>
+      pagination(
+        pagination_size = 10,
+        mode = "remote",
+        request_handler = custom_handler
+      )
+  })
 
-    shiny::onSessionEnded(close_api)
+  shiny::onSessionEnded(close_api)
 
+  highlighter_server(input, output, "remote_api_pagination")
 }
 
 shinyApp(ui, server)
-`

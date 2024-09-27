@@ -1,4 +1,4 @@
-# https://tabulator.info/docs/5.5/layout#layout
+# https://tabulator.info/docs/6.2/layout#layout
 column_layout_modes <- c(
   "fitData", "fitDataFill", "fitDataStretch", "fitDataTable", "fitColumns"
 )
@@ -6,7 +6,7 @@ column_layout_modes <- c(
 #' Available Column Layout Modes
 #' @return A character The available options to set the column layout mode
 #' @export
-get_available_column_layout_modes <- function() {
+get_available_column_layout_modes <- function() {  # nolint [object_length_linter]
   column_layout_modes
 }
 
@@ -21,7 +21,7 @@ get_available_column_layout_modes <- function() {
 #' true.
 #' @param tabulator_object An object of class tabulator
 #'
-#' @seealso [tabulator documentation](https://tabulator.info/docs/5.5/layout#layoutcolumnsonnewdata)
+#' @seealso [tabulator documentation](https://tabulator.info/docs/6.2/layout#layoutcolumnsonnewdata)
 #'
 #' @return An object of class tabulator
 #'
@@ -33,19 +33,19 @@ set_layout_columns_on_new_data <- function(tabulator_object) {
 
 
 #' Set the column layout mode
-#' 
+#'
 #' You can choose how your table should layout its columns by setting the
 #' layout mode.
-#' 
+#'
 #' @param tabulator_object An object of class tabulator
 #' @param mode A character
-#' 
+#'
 #' @return An object of class tabulator
-#' 
-#' @seealso [tabulator documentation](https://tabulator.info/docs/5.5/layout#layout)
+#'
+#' @seealso [tabulator documentation](https://tabulator.info/docs/6.2/layout#layout)
 #' @seealso `get_available_column_layout_modes()` for a list of the available
 #' modes.
-#' 
+#'
 #' @export
 column_layout_mode <- function(tabulator_object, mode) {
   if (test_for_valid_mode(mode)) {
@@ -57,7 +57,7 @@ column_layout_mode <- function(tabulator_object, mode) {
 #' @importFrom checkmate test_subset
 #' @importFrom glue glue
 #' @importFrom rlang warn
-#' @noRd 
+#' @noRd
 test_for_valid_mode <- function(mode) {
   test <- TRUE
   if (!test_subset(mode, column_layout_modes)) {

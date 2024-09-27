@@ -2,14 +2,27 @@
 % Please edit documentation in R/tabulator.R
 \name{tabulator}
 \alias{tabulator}
-\title{\if{html}{\out{
-<Add Title>
-}}}
+\title{Tabulator table}
 \usage{
-tabulator(data = NULL, width = NULL, height = NULL, elementId = NULL)
+tabulator(
+  data = NULL,
+  width = NULL,
+  height = NULL,
+  elementId = NULL,
+  theme = "bootstrap5"
+)
+}
+\arguments{
+\item{data}{A data frame or tibble}
+
+\item{width}{The width of the widget}
+
+\item{height}{The height of the widget}
+
+\item{elementId}{The ID of the widget}
+
+\item{theme}{The theme of the widget}
 }
 \description{
-\if{html}{\out{
-<Add Description>
-}}
+Renders a tabulator table
 }

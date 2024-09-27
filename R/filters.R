@@ -1,5 +1,6 @@
 available_symbol_operators <- list(
   `=` = "==",
+  `!=` = "!=",
   `<` = "<",
   `>` = ">",
   `<=` = "<=",
@@ -7,8 +8,10 @@ available_symbol_operators <- list(
   `in` = "%in%"
 )
 
+
 #' @importFrom glue glue
-parse_filters_from_query_string <- function(query_string) {
+#' @noRd
+parse_filters_from_query_string <- function(query_string) { # nolint [object_length_linter]
   filter_names <- grep(
     pattern = "^filter\\[\\d+\\]\\[[a-zA-Z]+\\]$",
     x = names(query_string),
@@ -34,25 +37,75 @@ parse_filters_from_query_string <- function(query_string) {
 }
 
 #' @importFrom stringr str_extract
-extract_unique_numbers_from_query_string <- function(query_string_names) {
+extract_unique_numbers_from_query_string <- function(query_string_names) { # nolint [object_length_linter]
   str_extract(query_string_names, "(?<=\\[)\\d+(?=\\])") |>
     unique() |>
     as.numeric()
 }
 
 
-#' @importFrom stringr str_detect
-#' @importFrom rlang sym
+#' @importFrom stringr str_detect str_starts str_ends
+#' @importFrom rlang sym warn
+#' @importFrom glue glue
 #' @importFrom dplyr filter
+#' @noRd
 run_filter_func <- function(data_in, type, field, value) {
-  if (type == "like") {
-    data_in |>
-      filter(str_detect(!!sym(field), value))
-  } else if (is_symbol_operator(type)) {
-    dynamic_symbol_filter(data_in, type, field, value)
-  }
+  # TODO Fede Oct 15 / Extract the logic of callback functions to a similar logic applied in dynamic_symbol_filter
+  tryCatch(
+    {
+      # Parse pattern to allow modified patterns when working with dbplyr
+      # See https://www.tidyverse.org/blog/2023/10/dbplyr-2-4-0/#new-translations
+      pattern <- parse_pattern(data_in, type, value)
+
+      if (type == "like") {
+        data_in |>
+          filter(str_detect(string = !!sym(field), pattern = pattern))
+      } else if (type == "ends") {
+        data_in |>
+          filter(str_ends(string = !!sym(field), pattern = pattern))
+      } else if (type == "regex") {
+        if (is_sqlite_backend(data_in)) {
+          cli_alert_warning("The `regex` filter is not supported in SQLite. Returning the unfiltered dataset.")
+          data_in
+        } else {
+          data_in |>
+            filter(grepl(x = !!sym(field), pattern = pattern))
+        }
+      } else if (type == "starts") {
+        data_in |>
+          filter(str_starts(string = !!sym(field), pattern = pattern))
+      } else if (is_symbol_operator(type)) {
+        dynamic_symbol_filter(data_in, type, field, pattern)
+      }
+    },
+    error = function(cond) {
+      message <- glue(
+        "Server-side error when filtering {field} with {value} and type {type}.\n",
+        "Error: {cond$message}.\n",
+        "Returning the unfiltered dataset."
+      )
+      warn(
+        message = message,
+        class = "ErrorFilter"
+      )
+      data_in
+    }
+  )
 }
 
+#' @importFrom stringr fixed
+parse_pattern <- function(data_in, type, value) {
+  if (!inherits(data_in, "tbl_lazy")) {
+    value
+  } else {
+    switch(type,
+      "like" = fixed(value),
+      "ends" = fixed(value),
+      "starts" = fixed(value),
+      value
+    )
+  }
+}
 
 is_symbol_operator <- function(type) {
   type %in% names(available_symbol_operators)
@@ -63,13 +116,20 @@ match_symbol_operator <- function(type) {
   available_symbol_operators[[type]]
 }
 
+#' @importFrom dplyr filter
+#' @importFrom rlang parse_expr
+#' @importFrom glue glue
 dynamic_symbol_filter <- function(data_in, type, field, value) {
   operator <- match_symbol_operator(type)
-  expr_str <- paste0("!!sym(field) ", operator, " value")
-  expr_str <- glue("!!{field} {operator} {value}")
-  expr <- rlang::parse_expr(expr_str)
-  data_in |>
-    filter(rlang::eval_tidy(expr))
+  if (is.numeric(data_in[[field]])) {
+    browser()
+    expr_str <- glue("{field} {operator} {value}")
+  } else {
+    expr_str <- glue("{field} {operator} '{value}'")
+  }
+  filtered_data <- data_in |>
+    filter(!!rlang::parse_expr(expr_str))
+  filtered_data
 }
 
 filter_data <- function(data_in, query_string) {
@@ -88,5 +148,8 @@ filter_data <- function(data_in, query_string) {
   data_in
 }
 
-# cola <- parse_filters_from_query_string(query_string)
 
+#' @importFrom rlang inherits_any
+is_sqlite_backend <- function(data_in) {
+  inherits_any(data_in, "tbl_SQLiteConnection")
+}

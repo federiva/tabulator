@@ -1,67 +1,128 @@
-devtools::load_all()
 library(shiny)
+library(dplyr)
 library(tabulator)
 library(RSQLite)
+library(dplyr)
+library(dbplyr)
 
-temp_sqlite_path <- file.path(tempdir(), "iris.sqlite")
+example_data <- data.frame(
+  numbers_eq = c(1:10),
+  numbers_gt = c(1:10),
+  numbers_lt = c(1:10),
+  numbers_ne = c(1:10),
+  numbers_gte = c(1:10),
+  numbers_lte = c(1:10),
+  letters_eq = letters[1:10],
+  letters_in = c("abc", "def", "ghi", "jkl", "mnñ", "opq", "rst", "uvw", "xyz", "abc"),
+  letters_regex = c("abc", "def", "ghi", "jkl", "mnñ", "opq", "rst", "uvw", "xyz", "abc"),
+  letters_ends = c("abc", "def", "ghi", "jkl", "mnñ", "opq", "rst", "uvw", "xyz", "abc"),
+  letters_starts = c("abc", "def", "ghi", "jkl", "mnñ", "opq", "rst", "uvw", "xyz", "abc")
+)
+
+temp_sqlite_path <- file.path(tempdir(), "example_data")
 # Create DB
-con <- dbConnect(SQLite(), dbname = temp_sqlite_path)
-# Modifying column names for using them in tabulator
-modified_iris <- iris
-colnames(modified_iris) <- stringi::stri_replace_all(str = colnames(iris), replacement = "_", regex = "\\.")
-dbWriteTable(con, "iris", modified_iris)
 
-# Helper function to paginate results using SQL
-get_paginated_data <- function(page, page_size = 10) {
-  offset <- (page - 1) * page_size
-  query <- sprintf("SELECT * FROM iris LIMIT %d OFFSET %d", page_size, offset)
-  dbGetQuery(con, query)
-}
-
-# Define a custom handler to pass to tabulator to handle the queries that
-# R will send to the DB
-custom_handler <- function(data, req) {
-  query_string <- parseQueryString(req$QUERY_STRING)
-  page_size <- as.numeric(query_string$size)
-  page <- as.numeric(query_string$page)
-  db_data <- get_paginated_data(page, page_size)
-  last_page <- ceiling(dbGetQuery(con, "SELECT COUNT() as count FROM iris") / page_size)
-  serialized_data <- jsonlite::toJSON(
-    list(
-      data = db_data,
-      last_page = last_page[[1]]
-    ),
-    dataframe = "rows"
-  )
-
-  httpResponse(
-    content_type = "application/json",
-    content = serialized_data
-  )
-}
 
 ui <- fluidPage(
-  tabulatorOutput("table")
+  tabulatorOutput("table"),
+  highlighter_ui()
 )
 
 server <- function(input, output, session) {
   # When the data is obtained from a remote source then the data argument
   # of the tabulator function could be empty/NULL
+  con <- dbConnect(SQLite(), dbname = temp_sqlite_path)
+  dbWriteTable(con, "example_data", example_data, overwrite = TRUE)
+  db_data <- tbl(con, "example_data")
+
   output$table <- renderTabulator({
     tabulator() |>
       column_layout_mode("fitColumns") |>
-      set_layout_columns_on_new_data() |>
+      tabulator_columns(
+        list(
+          tabulator_column(
+            title = "let =",
+            field = "letters_eq",
+            headerFilter = TRUE,
+            headerFilterFunc = "="
+          ),
+          tabulator_column(
+            title = "let in",
+            field = "letters_in",
+            headerFilter = TRUE,
+            headerFilterFunc = "in"
+          ),
+          tabulator_column(
+            title = "eq =",
+            field = "numbers_eq",
+            headerFilter = TRUE,
+            headerFilterFunc = "="
+          ),
+          tabulator_column(
+            title = "neq !=",
+            field = "numbers_ne",
+            headerFilter = TRUE,
+            headerFilterFunc = "!="
+          ),
+          tabulator_column(
+            title = "gt >",
+            field = "numbers_gt",
+            headerFilter = TRUE,
+            headerFilterFunc = ">"
+          ),
+          tabulator_column(
+            title = "gte >=",
+            field = "numbers_gte",
+            headerFilter = TRUE,
+            headerFilterFunc = ">="
+          ),
+          tabulator_column(
+            title = "lt <",
+            field = "numbers_lt",
+            headerFilter = TRUE,
+            headerFilterFunc = "<"
+          ),
+          tabulator_column(
+            title = "lte <=",
+            field = "numbers_lte",
+            headerFilter = TRUE,
+            headerFilterFunc = "<="
+          ),
+          tabulator_column(
+            title = "regex",
+            field = "letters_regex",
+            headerFilter = TRUE,
+            headerFilterFunc = "regex"
+          ),
+          tabulator_column(
+            title = "ends",
+            field = "letters_ends",
+            headerFilter = TRUE,
+            headerFilterFunc = "ends"
+          ),
+          tabulator_column(
+            title = "starts",
+            field = "letters_starts",
+            headerFilter = TRUE,
+            headerFilterFunc = "starts"
+          )
+        )
+      ) |>
       pagination(
-        pagination_size = 15,
+        pagination_size = 5,
         mode = "remote",
-        request_handler = custom_handler
-      )
+        request_handler = default_sql_request_handler(db_data)
+      ) |>
+      set_layout_columns_on_new_data()
   })
 
   # Remove the temporary database once we finish
   shiny::onStop(function() {
+    DBI::dbDisconnect(con)
     unlink(temp_sqlite_path, force = TRUE)
   })
 
+  highlighter_server(input, output, "remote_db_pagination")
 }
+
 shinyApp(ui, server)

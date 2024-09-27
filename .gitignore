@@ -1,2 +1,7 @@
 .Rproj.user
 .Rhistory
+# {shinytest2}: Ignore new debug snapshots for `$expect_values()`
+*_.new.png
+inst/examples/quarto
+!example_quarto.qmd
+.Renviron

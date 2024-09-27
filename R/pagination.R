@@ -55,12 +55,17 @@ get_available_pagination_modes <- function() {
 #' @param request_handler A function with the data and req parameters that is
 #' passed as the `filterFunc` argument of `session$registerDataObj`
 #'
-#' @seealso [tabulator documentation](https://tabulator.info/docs/5.5/page)
+#' @seealso [tabulator documentation](https://tabulator.info/docs/6.2/page)
 #'
 #' @return An object of class tabulator
 #'
 #' @export
-pagination <- function(tabulator_object, mode = 'local', pagination_size = 10, pagination_initial_page = 1, request_handler = NULL) {
+pagination <- function(
+    tabulator_object,
+    mode = "local",
+    pagination_size = 10,
+    pagination_initial_page = 1,
+    request_handler = NULL) {
   if (test_for_valid_pagination_mode(mode)) {
     tabulator_object$x$pagination <- TRUE
     tabulator_object <- set_pagination_mode(tabulator_object, mode, request_handler)
@@ -78,13 +83,17 @@ filter_data_on_request <- function(request_obj, data_in) {
   if (length(query_string) == 0) {
     return()
   }
-  data_in <- filter_data(data_in, query_string)
+  data_in <- filter_data(data_in, query_string) |> sort_data(query_string)
   page_number <- as.numeric(query_string$page)
   page_size <- as.numeric(query_string$size)
   start_row <- (page_number - 1) * page_size + 1
   end_row <- page_number * page_size
-  # Subset the dataframe based on the calculated indices
-  data_in[start_row:min(end_row, nrow(data_in)), ]
+  # Subset the dataframe based on the calculated indexes
+  if (nrow(data_in) == 0) {
+    data_in
+  } else {
+    data_in[start_row:min(end_row, nrow(data_in)), ]
+  }
 }
 
 
@@ -153,4 +162,40 @@ set_pagination_mode <- function(tabulator_object, mode, request_handler = NULL) 
     mode <- "local"
   }
   tabulator_object
+}
+
+#' Default Request Handler for SQL
+#' Intended to be used with a database connection along with pagination when constructing
+#' the table.
+#' @param tbl_db A tbl object. Could be a lazy table from the dplyr package.
+#' @importFrom dplyr tbl collect
+#' @importFrom jsonlite toJSON
+#' @importFrom shiny httpResponse parseQueryString
+#' @export
+default_sql_request_handler <- function(tbl_db) {
+  function(data, req) {
+    query_string <- parseQueryString(req$QUERY_STRING)
+    page_size <- as.numeric(query_string$size)
+    page <- as.numeric(query_string$page)
+    db_data <- tbl_db |>
+      filter_data(query_string = query_string) |>
+      sort_data(query_string = query_string)
+
+    paginated_data <- db_data |>
+      paginated_select(limit = page_size, page = page) |>
+      collect()
+
+    last_page <- get_total_pages(db_data, page_size)
+    serialized_data <- toJSON(
+      list(
+        data = paginated_data,
+        last_page = last_page[[1]]
+      ),
+      dataframe = "rows"
+    )
+    httpResponse(
+      content_type = "application/json",
+      content = serialized_data
+    )
+  }
 }
