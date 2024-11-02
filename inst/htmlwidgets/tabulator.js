@@ -15,14 +15,17 @@ HTMLWidgets.widget({
 
       renderValue: function(x) {
         // TODO: look for an old table and destroy it before re rendering
+        console.log("rendering poni")
         window.la = el;
         window.da = x;
         if (!!x.table_options.spreadsheet) {
+          console.log("rendering spreadsheet")
           table = new Tabulator(`#${el.id}`, {
             spreadsheetData: !!x.data ? x.data : null,
             ...parseTableOptions(x, ["data"]),
           })
         } else {
+          console.log("rendering")
           table = new Tabulator(`#${el.id}`, {
             data: x.data,
             layout: x.column_layout_mode,
@@ -57,6 +60,7 @@ const parseLayout = layoutObject => {
 
 const parsePagination = serializedData => {
   return {
+    autoColumns: !!serializedData.columns ? false : true,
     pagination: serializedData.pagination,
     paginationMode: serializedData.paginationMode,
     ajaxURL: serializedData.ajaxURL,
@@ -68,6 +72,7 @@ const parsePagination = serializedData => {
 
 const parseColumns = x => {
   const isPaginationModeRemote = x.paginationMode === "remote";
+  console.log('parsing columns')
   return {
     autoColumns: !!x.columns ? false : true,
     columns: (!isPaginationModeRemote || !!x.columns) ? x.columns ? x.columns : [] : []

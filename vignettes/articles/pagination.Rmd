@@ -1,0 +1,465 @@
+---
+title: "Pagination"
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, echo = FALSE}
+library(tabulator)
+```
+
+### Pagination in the Tabulator Package
+
+The `tabulator` package offers a robust and flexible system for implementing pagination in Shiny applications. Pagination allows you to manage large datasets efficiently by dividing them into manageable chunks, enhancing both performance and user experience.
+This summary provides an overview of how to use pagination in the `tabulator` package and explores the different modes available: **Local**, **Server**, and **Remote**.
+
+---
+
+#### Table of Contents
+
+- [Getting Started with Pagination](#getting-started-with-pagination)
+- [Pagination Modes](#pagination-modes)
+  - [Local Pagination](#local-pagination)
+  - [Server Pagination](#server-pagination)
+  - [Remote Pagination](#remote-pagination)
+- [Advanced Features](#advanced-features)
+  - [Custom Request Handlers](#custom-request-handlers)
+  - [Integration with Databases](#integration-with-databases)
+  - [Error Handling](#error-handling)
+- [Example Implementations](#example-implementations)
+- [Best Practices](#best-practices)
+- [Additional Resources](#additional-resources)
+
+---
+
+## Getting Started with Pagination
+
+To enable pagination in your `tabulator` table, you can use the `pagination()` function. This function allows you to configure various aspects of pagination, such as the mode, page size, and request handlers.
+
+**Basic Example:**
+
+```r
+library(shiny)
+library(tabulator)
+
+ui <- fluidPage(
+  tabulatorOutput("table")
+)
+
+server <- function(input, output, session) {
+
+  output$table <- renderTabulator({
+    tabulator(people_data) |>
+      pagination(
+        mode = "local",
+        pagination_size = 5
+      )
+  })
+}
+
+shinyApp(ui, server)
+```
+
+In this example:
+
+- **`mode`**: Specifies the pagination mode (`"local"`, `"server"`, or `"remote"`).
+- **`pagination_size`**: Determines the number of records displayed per page.
+
+---
+
+## Pagination Modes
+
+The `tabulator` package for Shiny supports three primary pagination modes, each tailored to different use cases and data sources. This is different from the JS Tabulator library which has two pagination modes (local and remote).
+
+### Local Pagination
+
+**Description:**
+Local pagination handles data entirely on the client side (browser). All data is loaded at once, and pagination controls are managed without further server interaction.
+
+In Shiny, this means that all of the data will be sent from the Server to the Client (Browser) at once.
+
+**Use Cases:**
+
+- Small to moderately sized datasets.
+- Scenarios where immediate responsiveness is desired without server round-trips.
+
+**Implementation Example:**
+
+```r
+output$table <- renderTabulator({
+  tabulator(people_data) |>
+    pagination(
+      mode = "local",
+      pagination_size = 5
+    )
+})
+```
+
+**Pros:**
+
+- Simplifies implementation as no server-side handling is required.
+- Faster interactions since data is already available on the client.
+
+**Cons:**
+
+- Not suitable for very large datasets due to increased initial load time and memory usage.
+
+### Server Pagination
+
+**Description:**
+Server pagination fetches only the data required for the current page from the server. The server manages pagination logic, including data filtering and sorting.
+
+In Shiny, this means that only the data for the current page will be sent from the Server to the Client (Browser), but the entire dataset is still loaded on the Server.
+
+**Use Cases:**
+
+- Large datasets where loading all data at once is impractical.
+- Cases in which due to the size of the dataset, it is not practical to load all
+of the data into the Client (Browser), thus we reduce the network usage by only
+sending a subset of the data.
+
+
+**Implementation Example:**
+
+```r
+server <- function(input, output, session) {
+  output$table <- renderTabulator({
+    tabulator(people_data) |>
+      pagination(
+        mode = "server",
+        pagination_size = 5
+      )
+  })
+}
+```
+
+**Pros:**
+
+- Reduced Network usage and memory usage from the Server to the Client (Browser).
+- Improved performance as only relevant data is processed and sent to the Client (Browser).
+- Easy to implement.
+
+**Cons:**
+
+- It does not reduces the amount of data loaded in the Server, thus the memory usage on the Server can become an issue if the dataset is large enough.
+
+### Remote Pagination
+
+**Description:**
+Remote pagination is designed for scenarios where data is fetched from external
+sources like APIs or remote databases. It requires a custom request handler to
+manage data retrieval based on pagination parameters. This package provides a set
+of default request handlers for common cases, but you can also provide your own
+custom request handlers.
+
+**Use Cases:**
+
+- Data stored in external APIs or databases.
+- Applications needing to integrate with third-party data services.
+
+**Implementation Example:**
+
+```r
+
+server <- function(input, output, session, my_db_connection) {
+
+  lazy_db_connection <- tbl(my_db_connection, "my_table")
+
+  output$table <- renderTabulator({
+    tabulator() |>
+      pagination(
+        mode = "remote",
+        pagination_size = 5,
+        request_handler = default_sql_request_handler(lazy_db_connection)
+      )
+  })
+}
+```
+
+**Pros:**
+
+- Only the data for the current page is requested from the Server and sent to the Client (Browser).
+This reduces the network usage and memory usage on the Server.
+- Enables integration with a wide range of external data sources.
+- Facilitates scalable applications by offloading data processing.
+- Reduced Network usage and memory usage from the Server to the Client (Browser).
+- Improved performance as only relevant data is processed and sent to the Client (Browser).
+-
+
+**Cons:**
+
+- Requires more complex setup and maintenance for the request handler.
+- Dependent on the availability and performance of external data sources.
+
+---
+
+---
+
+## Advanced Features
+
+### Custom Request Handlers
+
+In server and remote modes, the `request_handler` function plays a crucial role in managing data requests based on pagination parameters. This function should handle incoming requests, process them (e.g., query a database), and return the appropriate subset of data.
+
+**Example:**
+
+```r
+custom_request_handler <- function(data, req) {
+  query <- parseQueryString(req$QUERY_STRING)
+  page_size <- as.numeric(query$size)
+  page_number <- as.numeric(query$page)
+
+  # Example: Query a PostgreSQL database for paginated data
+  paginated_data <- db_data |>
+    filter(Gender == "male") |>
+    slice((page_number - 1) * page_size + 1:page_size)
+
+  httpResponse(
+    content_type = "application/json",
+    content = toJSON(paginated_data, dataframe = "rows")
+  )
+}
+```
+
+### Integration with Databases
+
+The package seamlessly integrates with various databases like PostgreSQL, MySQL, SQLite, and DuckDB. By leveraging `DBI` and `dplyr`, you can efficiently manage data retrieval and pagination.
+
+**Example with PostgreSQL:**
+
+```r
+server <- function(input, output, session) {
+  con <- dbConnect(
+    RPostgres::Postgres(),
+    dbname = "tabulator_test",
+    host = "localhost",
+    port = 5432,
+    user = Sys.getenv("POSTGRES_USER"),
+    password = Sys.getenv("POSTGRES_PASSWORD")
+  )
+
+  dbWriteTable(con, "example_data", example_data, overwrite = TRUE, temporary = TRUE)
+  db_data <- tbl(con, "example_data") |>
+    filter(Gender == "male")
+
+  output$table <- renderTabulator({
+    tabulator() |>
+      pagination(
+        mode = "remote",
+        pagination_size = 5,
+        request_handler = function(data, req) {
+          query <- parseQueryString(req$QUERY_STRING)
+          page_size <- as.numeric(query$size)
+          page_number <- as.numeric(query$page)
+
+          paginated_data <- db_data |>
+            slice((page_number - 1) * page_size + 1:page_size)
+
+          httpResponse(
+            content_type = "application/json",
+            content = toJSON(paginated_data, dataframe = "rows")
+          )
+        }
+      )
+  })
+
+  onStop(function() {
+    dbDisconnect(con)
+  })
+}
+```
+
+### Error Handling
+
+Implementing robust error handling within your pagination setup ensures that your application can gracefully manage issues like database connection failures or invalid pagination parameters.
+
+**Example:**
+
+```r
+custom_request_handler <- function(data, req) {
+  query <- parseQueryString(req$QUERY_STRING)
+
+  if (is.null(query$page) || is.null(query$size)) {
+    return(httpResponse(
+      status = 400,
+      content_type = "application/json",
+      content = toJSON(list(error = "Missing pagination parameters"))
+    ))
+  }
+
+  # Proceed with data fetching...
+}
+```
+
+---
+
+## Example Implementations
+
+The `tabulator` package includes several example Shiny applications demonstrating different pagination modes. These examples serve as practical guides for implementing pagination in various scenarios.
+
+1. **Remote Database Pagination (PostgreSQL):**
+
+   ```r
+   library(shiny)
+   library(dplyr)
+   library(tabulator)
+   library(RPostgres)
+   library(DBI)
+   library(dbplyr)
+
+   ui <- fluidPage(
+     tabulatorOutput("table"),
+     highlighter_ui()
+   )
+
+   server <- function(input, output, session) {
+     con <- dbConnect(
+       RPostgres::Postgres(),
+       dbname = "tabulator_test",
+       host = "localhost",
+       port = 5432,
+       user = Sys.getenv("POSTGRES_USER"),
+       password = Sys.getenv("POSTGRES_PASSWORD")
+     )
+
+     dbWriteTable(con, "example_data", example_data, overwrite = TRUE, temporary = TRUE)
+     db_data <- tbl(con, "example_data") |>
+       filter(Gender == "male")
+
+     output$table <- renderTabulator({
+       tabulator() |>
+         column_layout_mode("fitColumns") |>
+         tabulator_columns(
+           list(
+             tabulator_column(title = "Name", field = "Name", headerFilter = TRUE, headerFilterFunc = "="),
+             tabulator_column(title = "Progress", field = "Progress", headerFilter = TRUE, headerFilterFunc = ">=")
+             # Additional columns...
+           )
+         ) |>
+         pagination(
+           pagination_size = 5,
+           mode = "remote",
+           request_handler = function(data, req) {
+             query <- parseQueryString(req$QUERY_STRING)
+             page_size <- as.numeric(query$size)
+             page_number <- as.numeric(query$page)
+
+             paginated_data <- db_data |>
+               slice((page_number - 1) * page_size + 1:page_size)
+
+             httpResponse(
+               content_type = "application/json",
+               content = toJSON(paginated_data, dataframe = "rows")
+             )
+           }
+         ) |>
+         set_layout_columns_on_new_data()
+     })
+
+     onStop(function() {
+       dbDisconnect(con)
+     })
+
+     highlighter_server(input, output, "remote_db_pagination_postgres")
+   }
+
+   shinyApp(ui, server)
+   ```
+
+2. **Remote API Pagination:**
+
+   ```r
+   library(shiny)
+   library(tabulator)
+   library(callr)
+
+   run_api <- function() {
+     library(plumber)
+     pr <- plumb(file = "inst/examples/example_api.R")
+     pr$run(port = 5826)
+   }
+
+   background_api <- callr::r_bg(run_api)
+
+   close_api <- function() {
+     background_api$kill()
+   }
+
+   ui <- fluidPage(
+     tabulatorOutput("table"),
+     highlighter_ui()
+   )
+
+   custom_handler <- function(data, req) {
+     query <- parseQueryString(req$QUERY_STRING)
+     page_size <- as.numeric(query$size)
+     page_number <- as.numeric(query$page)
+
+     response <- httr2::request("http://127.0.0.1:5826/iris") |>
+       httr2::req_url_query(page = page_number, page_size = page_size) |>
+       httr2::req_perform() |>
+       httr2::resp_body_json()
+
+     httpResponse(
+       content_type = "application/json",
+       content = toJSON(response[[1]])
+     )
+   }
+
+   server <- function(input, output, session) {
+     output$table <- renderTabulator({
+       tabulator() |>
+         column_layout_mode("fitColumns") |>
+         set_layout_columns_on_new_data() |>
+         pagination(
+           pagination_size = 10,
+           mode = "remote",
+           request_handler = custom_handler
+         )
+     })
+
+     onSessionEnded(close_api)
+     highlighter_server(input, output, "remote_api_pagination")
+   }
+
+   shinyApp(ui, server)
+   ```
+
+---
+
+## Best Practices
+
+1. **Choose the Right Pagination Mode:**
+   - Use **Local** for small datasets.
+   - Opt for **Server** or **Remote** when dealing with large datasets or external data sources.
+
+2. **Implement Robust Error Handling:**
+   - Ensure that your request handlers gracefully handle errors and provide meaningful feedback to users.
+
+3. **Optimize Database Queries:**
+   - When using server-side pagination, ensure that your database queries are optimized for performance, especially with large datasets.
+
+4. **Secure Your Data:**
+   - Sanitize all inputs and manage database credentials securely to prevent injection attacks and unauthorized access.
+
+5. **Test Thoroughly:**
+   - Implement comprehensive test cases to cover various pagination scenarios, ensuring reliability and performance.
+
+---
+
+## Additional Resources
+
+- [Tabulator Documentation - Pagination](https://tabulator.info/docs/6.2/page)
+- [Tabulator Documentation - Columns](https://tabulator.info/docs/6.2/columns)
+- [Shiny Documentation](https://shiny.rstudio.com/articles/)
+- [DBI Package](https://db.r-hub.io/dbi/)
+- [Plumber for Building APIs in R](https://www.rplumber.io/)
+
+---
+
+By leveraging the pagination capabilities of the `tabulator` package, you can create efficient and scalable Shiny applications that handle large datasets with ease. Whether opting for local, server-side, or remote pagination, the package provides the necessary tools to tailor your application's data management to your specific needs.

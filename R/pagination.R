@@ -182,7 +182,7 @@ default_sql_request_handler <- function(tbl_db) {
       sort_data(query_string = query_string)
 
     paginated_data <- db_data |>
-      paginated_select(limit = page_size, page = page) |>
+      paginated_select(page_size = page_size, page = page) |>
       collect()
 
     last_page <- get_total_pages(db_data, page_size)

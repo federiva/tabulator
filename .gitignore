@@ -5,3 +5,9 @@
 inst/examples/quarto
 !example_quarto.qmd
 .Renviron
+docs
+.RData
+.Rproj.user
+.Rhistory
+inst/doc
+vignettes/*.R

@@ -5,7 +5,6 @@
 # field - Required (not required in icon/button columns) this is the key for this column in the data array
 # visible - (boolean, default - true) determines if the column is visible. (see Column Visibility for more details)
 
-
 # hoz_align - sets the horizontal text alignment for this column (left|center|right)
 # vert_align - sets the vertical text alignment for this column (top|middle|bottom)
 # header_hoz_align - sets the horizontal text alignment for this columns header title (left|center|right)

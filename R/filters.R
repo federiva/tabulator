@@ -122,7 +122,6 @@ match_symbol_operator <- function(type) {
 dynamic_symbol_filter <- function(data_in, type, field, value) {
   operator <- match_symbol_operator(type)
   if (is.numeric(data_in[[field]])) {
-    browser()
     expr_str <- glue("{field} {operator} {value}")
   } else {
     expr_str <- glue("{field} {operator} '{value}'")

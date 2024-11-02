@@ -10,6 +10,7 @@ get_available_column_layout_modes <- function() {  # nolint [object_length_linte
   column_layout_modes
 }
 
+## TODO Review if we can avoid this function from being exported
 #' Sets layout columns on new data inserted
 #'
 #' To keep the layout of the columns consistent, once the column widths have
@@ -30,6 +31,7 @@ set_layout_columns_on_new_data <- function(tabulator_object) {
   tabulator_object$x$layout_columns_on_new_data <- TRUE
   tabulator_object
 }
+
 
 
 #' Set the column layout mode
