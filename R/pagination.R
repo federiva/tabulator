@@ -83,7 +83,8 @@ filter_data_on_request <- function(request_obj, data_in) {
   if (length(query_string) == 0) {
     return()
   }
-  data_in <- filter_data(data_in, query_string) |> sort_data(query_string)
+  data_in <- filter_data(data_in, query_string) |>
+    sort_data(query_string)
   page_number <- as.numeric(query_string$page)
   page_size <- as.numeric(query_string$size)
   start_row <- (page_number - 1) * page_size + 1
