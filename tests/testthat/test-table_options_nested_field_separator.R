@@ -3,7 +3,6 @@ test_that(
   "Some columns are not rendered when nestedFieldSeparator is set to '__' as well as the column names",
   {
     skip_on_cran()
-    skip_on_cran()
     shiny_proc <- callr::r_bg(
       func = function() {
         library(shiny)
