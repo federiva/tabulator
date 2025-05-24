@@ -1,7 +1,7 @@
 library(shiny)
 library(dplyr)
 library(tabulator)
-library(RPostgres)
+library(RMySQL)
 library(DBI)
 library(dplyr)
 library(dbplyr)
