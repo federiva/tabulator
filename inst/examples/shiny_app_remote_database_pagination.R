@@ -112,8 +112,7 @@ server <- function(input, output, session) {
         pagination_size = 5,
         mode = "remote",
         request_handler = default_sql_request_handler(db_data)
-      ) |>
-      set_layout_columns_on_new_data()
+      )
   })
 
   # Remove the temporary database once we finish

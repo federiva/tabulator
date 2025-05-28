@@ -357,8 +357,7 @@ The `tabulator` package includes several example Shiny applications demonstratin
                content = toJSON(paginated_data, dataframe = "rows")
              )
            }
-         ) |>
-         set_layout_columns_on_new_data()
+         )
      })
 
      onStop(function() {
@@ -415,7 +414,6 @@ The `tabulator` package includes several example Shiny applications demonstratin
      output$table <- renderTabulator({
        tabulator() |>
          column_layout_mode("fitColumns") |>
-         set_layout_columns_on_new_data() |>
          pagination(
            pagination_size = 10,
            mode = "remote",

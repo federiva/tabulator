@@ -10,30 +10,6 @@ get_available_column_layout_modes <- function() {  # nolint [object_length_linte
   column_layout_modes
 }
 
-## TODO Review if we can avoid this function from being exported
-#' Sets layout columns on new data inserted
-#'
-#' To keep the layout of the columns consistent, once the column widths have
-#' been set on the first data load (either from the data property in the
-#' constructor or the setData function) they will not be changed when new
-#' data is loaded.
-#' If you would prefer that the column widths adjust to the data each time you
-#' load it into the table you can set the layoutColumnsOnNewData property to
-#' true.
-#' @param tabulator_object An object of class tabulator
-#'
-#' @seealso [tabulator documentation](https://tabulator.info/docs/6.2/layout#layoutcolumnsonnewdata)
-#'
-#' @return An object of class tabulator
-#'
-#' @export
-set_layout_columns_on_new_data <- function(tabulator_object) {
-  tabulator_object$x$layout_columns_on_new_data <- TRUE
-  tabulator_object
-}
-
-
-
 #' Set the column layout mode
 #'
 #' You can choose how your table should layout its columns by setting the

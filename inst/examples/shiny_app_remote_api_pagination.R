@@ -48,7 +48,6 @@ server <- function(input, output, session) {
   output$table <- renderTabulator({
     tabulator() |>
       column_layout_mode("fitColumns") |>
-      set_layout_columns_on_new_data() |>
       pagination(
         pagination_size = 10,
         mode = "remote",

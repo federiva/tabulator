@@ -12,7 +12,6 @@ server <- function(input, output, session) {
   output$table <- renderTabulator({
     tabulator(people_data) |>
       column_layout_mode("fitColumns") |>
-      set_layout_columns_on_new_data() |>
       pagination(pagination_size = 5, mode = "server") |>
       tabulator_columns(
         list(
