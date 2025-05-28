@@ -40,7 +40,7 @@ server <- function(input, output, session) {
   dbWriteTable(con, "example_data", people_data, overwrite = TRUE, temporary = TRUE)
   db_data <- tbl(con, "example_data") |>
     filter(
-      Gender == "male"
+      Gender == "male" # nolint
     )
 
   output$table <- renderTabulator({
