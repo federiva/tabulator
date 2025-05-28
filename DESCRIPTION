@@ -6,10 +6,6 @@ Authors@R:
            comment = c(ORCID = "YOUR-ORCID-ID"))
 Description: What the package does (one paragraph).
 License: MIT + file LICENSE
-Encoding: UTF-8
-Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
-LazyData: true
 Imports:
     checkmate,
     cli,
@@ -25,6 +21,7 @@ Imports:
     shiny,
     stringr
 Suggests:
+    bigrquery,
     callr,
     devtools,
     duckdb,
@@ -35,7 +32,11 @@ Suggests:
     selenider,
     shinytest2,
     testthat (>= 3.0.0)
-Config/testthat/edition: 3
-Config/Needs/website: rmarkdown
 Enhances: 
     RPostgres
+Config/Needs/website: rmarkdown
+Config/testthat/edition: 3
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
