@@ -97,7 +97,7 @@ show_example_builtin_params <- function(builtin_formatter) {
         "",
         "These should be entered as a named list to the `tabulator_column` function",
         "i" = "Run {.run tabulator::get_example_builtin_param(\"{builtin_formatter}\")} to get an example list of parameters", # nolint [line_length_linter]
-        "{symbol$fancy_question_mark} For additional help you can check the documentation in {.url https://tabulator.info/docs/6.2/format#format-builtin}"  # nolint [line_length_linter]
+        "{symbol$fancy_question_mark} For additional help you can check the documentation in {.url https://tabulator.info/docs/6.2/format#format-builtin}" # nolint [line_length_linter]
       )
     )
   }
