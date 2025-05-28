@@ -29,12 +29,11 @@ test_that(
       shiny_proc$kill()
     })
     # Wait until 2 secs to wait for the page to be rendered
-    Sys.sleep(2)
+    Sys.sleep(4)
     selenider::open_url("http://127.0.0.1:9999")
-
+    Sys.sleep(2)
     selenider::s(".tabulator-cell") |>
       elem_expect(has_text("a"))
-
     column_names <- selenider::ss(".tabulator-col-title") |>
       lapply(function(x) {
         x |> selenider::elem_text()
