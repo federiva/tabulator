@@ -29,7 +29,7 @@ test_that(
       shiny_proc$kill()
     })
     # Wait until 2 secs to wait for the page to be rendered
-    Sys.sleep(4)
+    Sys.sleep(2)
     selenider::open_url("http://127.0.0.1:9999")
     Sys.sleep(2)
     selenider::s(".tabulator-cell") |>
