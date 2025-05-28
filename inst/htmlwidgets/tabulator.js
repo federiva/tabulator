@@ -1,3 +1,13 @@
+const ShinyTabulatorCollection = {};
+
+const destroyTable = (id) => {
+  if (!!ShinyTabulatorCollection[id]) {
+    shinyTabulatorWarn(`Destroying table with id ${id}`);
+    ShinyTabulatorCollection[id].destroy();
+    delete ShinyTabulatorCollection[id];
+  }
+}
+
 HTMLWidgets.widget({
 
   name: 'tabulator',
@@ -14,23 +24,17 @@ HTMLWidgets.widget({
       },
 
       renderValue: function(x) {
-        // TODO: look for an old table and destroy it before re rendering
-        console.log("rendering poni")
-        window.la = el;
-        window.da = x;
+        destroyTable(el.id);
+        window.tabulator_table = x;
         if (!!x.table_options.spreadsheet) {
-          console.log("rendering spreadsheet")
           table = new Tabulator(`#${el.id}`, {
             spreadsheetData: !!x.data ? x.data : null,
             ...parseTableOptions(x, ["data"]),
           })
         } else {
-          console.log("rendering")
           table = new Tabulator(`#${el.id}`, {
             data: x.data,
             layout: x.column_layout_mode,
-            filterMode: "remote", // TODO Remove this default
-            layoutColumnsOnNewData: x.layout_columns_on_new_data,
             ...parseTableOptions(x),
             ...parsePagination(x),
             ...parseColumns(x),
@@ -40,14 +44,15 @@ HTMLWidgets.widget({
         if (!!window.Shiny) {
           subscribeTableEvents(x, el.id, table);
           subscribeDefaultEvents(table);
+          ShinyTabulatorCollection[el.id] = table;
         }
         window.pala = table;
       },
 
       resize: function(width, height) {
-
-        // TODO: code to re-render the widget with a new size
-
+        if (!!ShinyTabulatorCollection[el.id]) {
+          ShinyTabulatorCollection[el.id].redraw();
+        }
       }
 
     };
@@ -58,21 +63,9 @@ const parseLayout = layoutObject => {
 
 }
 
-const parsePagination = serializedData => {
-  return {
-    autoColumns: !!serializedData.columns ? false : true,
-    pagination: serializedData.pagination,
-    paginationMode: serializedData.paginationMode,
-    ajaxURL: serializedData.ajaxURL,
-    ajaxParams: serializedData.ajaxParams,
-    paginationSize: serializedData.paginationSize,
-    paginationInitialPage: serializedData.paginationInitialPage
-  }
-}
 
 const parseColumns = x => {
   const isPaginationModeRemote = x.paginationMode === "remote";
-  console.log('parsing columns')
   return {
     autoColumns: !!x.columns ? false : true,
     columns: (!isPaginationModeRemote || !!x.columns) ? x.columns ? x.columns : [] : []
